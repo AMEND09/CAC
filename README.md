@@ -4,3 +4,5 @@ INSTALL BY CREATING A PYTHON VIRTUAL ENVIRONMENT AND INSTALLING DEPENDENCIES THE
 ```bash
 python manage.py runserver
 ```
+
+ALL HTML FILES ARE IN ```website\templates\website```
