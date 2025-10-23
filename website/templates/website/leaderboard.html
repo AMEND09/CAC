@@ -1,0 +1,612 @@
+{% load static %}
+{% block head %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View the top student volunteers on ServeSync’s leaderboard, ranked by impact points, hours, people helped, or tasks completed.">
+    <meta name="keywords" content="ServeSync, volunteer leaderboard, student volunteers, Louisville, Kentucky">
+    <meta name="author" content="ServeSync Inc.">
+    <meta name="robots" content="index, follow">
+    <title>Student Leaderboard | ServeSync</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" integrity="sha512-1cK78a1o+ht2JcaW6g8OXYwqpev9+6GqOkz9xmBN9iUUhIndKtxwILGWYOSibOKjLsEdjyjZvYDq/cZwNeak0w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" integrity="sha512-A7AYk1fGKX6S2SsHywmPkrnzTZHrgiVT7GcQkLGDe2ev0aWb8zejytzS8wjo7PGEXKqJOrjQ4oORtnimIRZBtw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+{% endblock %}
+
+{% block body %}
+
+{% include 'website/student_nav.html' %}
+<section class="leaderboard-section">
+    <h1 data-aos="fade-down">Student Leaderboard</h1>
+    <p class="subtitle" data-aos="fade-up">Celebrating our top volunteers making a difference!</p>
+
+    <div class="leaderboard-container" data-aos="fade-up" data-aos-delay="100">
+        <!-- Filters -->
+        <aside class="sidebar">
+            <button class="mobile-filter-toggle"><i class="fas fa-filter"></i> Filters</button>
+            <form method="GET" id="filter-form" class="filter-form">
+                <div class="filter-group">
+                    <label for="sort_by">Sort By</label>
+                    <select id="sort_by" name="sort_by" aria-label="Sort leaderboard by metric">
+                        <option value="impact_points" {% if sort_by == 'impact_points' %}selected{% endif %}>Impact Points</option>
+                        <option value="hours" {% if sort_by == 'hours' %}selected{% endif %}>Hours Volunteered</option>
+                        <option value="people" {% if sort_by == 'people' %}selected{% endif %}>People Helped</option>
+                        <option value="tasks" {% if sort_by == 'tasks' %}selected{% endif %}>Tasks Completed</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="badge">Badge</label>
+                    <select id="badge" name="badge" aria-label="Filter by badge">
+                        <option value="" {% if not badge_filter %}selected{% endif %}>All Badges</option>
+                        {% for badge in badge_choices %}
+                            <option value="{{ badge }}" {% if badge_filter == badge %}selected{% endif %}>{{ badge }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <button type="submit" class="filter-btn">Apply Filters</button>
+                    <button type="button" class="reset-btn" onclick="window.location.href='{% url 'leaderboard' %}'">Reset</button>
+                </div>
+            </form>
+            <div class="loading-spinner" id="filter-spinner" style="display: none;">
+                <i class="fas fa-spinner fa-spin"></i> Applying filters...
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top 3 Students -->
+            <div class="top-students">
+                {% for student in top_students %}
+                    <div class="top-student-card rank-{{ forloop.counter }}" data-aos="zoom-in" data-aos-delay="{{ forloop.counter|add:1 }}">
+                        <div class="rank-badge">
+                            <i class="fas {% if forloop.counter == 1 %}fa-crown{% elif forloop.counter == 2 %}fa-medal{% else %}fa-trophy{% endif %}"></i>
+                            #{{ forloop.counter }}
+                        </div>
+                        <img src="{% if student.profile_picture %}{{ student.profile_picture.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}" alt="{{ student.first_name }} {{ student.last_name }} profile picture" class="profile-pic">
+                        <h3>{{ student.first_name }} {{ student.last_name }}</h3>
+                        <p class="badge">{{ student.badge|default:"No Badge" }}</p>
+                        <div class="stats">
+                            <p><i class="fas fa-clock"></i> {{ student.hours_volunteered }} Hours</p>
+                            <p><i class="fas fa-users"></i> {{ student.people_helped }} People</p>
+                            <p><i class="fas fa-check-circle"></i> {{ student.opportunities_completed }} Tasks</p>
+                            <p><i class="fas fa-star"></i> {{ student.impact_points }} Points</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="no-results">No students match the current filters.</p>
+                {% endfor %}
+            </div>
+
+            <!-- Other Students -->
+            <div class="other-students">
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Badge</th>
+                            <th>Hours</th>
+                            <th>People</th>
+                            <th>Tasks</th>
+                            <th>Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in other_students %}
+                            <tr data-aos="fade-up" data-aos-delay="{{ forloop.counter }}">
+                                <td>{{ forloop.counter|add:3 }}</td>
+                                <td>{{ student.first_name }} {{ student.last_name }}</td>
+                                <td>{{ student.badge|default:"No Badge" }}</td>
+                                <td>{{ student.hours_volunteered }}</td>
+                                <td>{{ student.people_helped }}</td>
+                                <td>{{ student.opportunities_completed }}</td>
+                                <td>{{ student.impact_points }}</td>
+                            </tr>
+                        {% empty %}
+                            {% if top_students %}
+                                <tr><td colspan="7">No additional students to display.</td></tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-grid">
+        <div class="footer-section">
+            <h3>ServeSync</h3>
+            <p>Connecting organizations with passionate volunteers.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Contact</h3>
+            <p>Email: <a href="mailto:servesyncinc@gmail.com">servesyncinc@gmail.com</a></p>
+            <p>Instagram: <a target="_blank" href="https://www.instagram.com/serve.sync/">@serve.sync</a></p>
+            <p>Location: Louisville, Kentucky</p>
+        </div>
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <p><a href="#volunteering">About</a></p>
+            <p><a href="#tutorial">Tutorial</a></p>
+            <p><a href="#faq">FAQ</a></p>
+        </div>
+    </div>
+    <p class="footer-bottom">© 2025 ServeSync. All rights reserved.</p>
+</footer>
+
+<!-- Styles -->
+<style>
+    /* General Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: #F5F7FA;
+        color: #1F2A44;
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    
+
+    /* Leaderboard Section */
+    .leaderboard-section {
+        padding: 3rem 1rem;
+        background: #F5F7FA;
+        flex: 1;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: #2A4494;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .subtitle {
+        font-size: 1.2rem;
+        color: #1F2A44;
+        opacity: 0.8;
+        margin-bottom: 2rem;
+    }
+
+    .leaderboard-container {
+        display: flex;
+        gap: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .sidebar {
+        width: 250px;
+        background: #FFFFFF;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+    .mobile-filter-toggle {
+        display: none;
+        width: 100%;
+        padding: 0.8rem;
+        background: #2A4494;
+        color: #F5F7FA;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-bottom: 1rem;
+        text-align: left;
+    }
+
+    .mobile-filter-toggle i {
+        margin-right: 0.5rem;
+    }
+
+    .filter-form {
+        display: block;
+    }
+
+    .filter-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .filter-group label {
+        display: block;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2A4494;
+        margin-bottom: 0.5rem;
+    }
+
+    .filter-group select {
+        width: 100%;
+        padding: 0.8rem;
+        font-size: 1rem;
+        border: 1px solid #C4C9D4;
+        border-radius: 8px;
+        background: #F5F7FA;
+        color: #1F2A44;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .filter-group select:focus {
+        border-color: #FFB74D;
+        box-shadow: 0 0 5px rgba(255, 183, 77, 0.5);
+        outline: none;
+    }
+
+    .filter-btn,
+    .reset-btn {
+        width: 100%;
+        padding: 0.8rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.3s;
+    }
+
+    .filter-btn {
+        background: #2A4494;
+        color: #F5F7FA;
+        margin-bottom: 0.5rem;
+    }
+
+    .filter-btn:hover {
+        background: #FFB74D;
+        color: #1F2A44;
+        transform: translateY(-3px);
+    }
+
+    .reset-btn {
+        background: #F8A488;
+        color: #1F2A44;
+    }
+
+    .reset-btn:hover {
+        background: #FF6F61;
+        color: #F5F7FA;
+        transform: translateY(-3px);
+    }
+
+    .loading-spinner {
+        text-align: center;
+        color: #2A4494;
+        font-size: 1rem;
+        margin-top: 1rem;
+    }
+
+    .main-content {
+        flex: 1;
+        background: #FFFFFF;
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .top-students {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .top-student-card {
+        background: #F5F7FA;
+        border-radius: 12px;
+        padding: 1.5rem;
+        width: 250px;
+        text-align: center;
+        position: relative;
+        transition: transform 0.3s, box-shadow 0.3s;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .top-student-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .top-student-card.rank-1 {
+        background: linear-gradient(135deg, #FFD700, #FFC107);
+        color: #1F2A44;
+        transform: scale(1.1);
+        z-index: 3;
+    }
+
+    .top-student-card.rank-2 {
+        background: linear-gradient(135deg, #C0C0C0, #A9A9A9);
+        color: #1F2A44;
+        z-index: 2;
+    }
+
+    .top-student-card.rank-3 {
+        background: linear-gradient(135deg, #CD7F32, #B87333);
+        color: #1F2A44;
+        z-index: 1;
+    }
+
+    .rank-badge {
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #2A4494;
+        color: #F5F7FA;
+        padding: 0.3rem 0.8rem;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .rank-badge i {
+        margin-right: 0.3rem;
+    }
+
+    .profile-pic {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0.5rem auto;
+        border: 3px solid #FFB74D;
+    }
+
+    .top-student-card h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin: 0.5rem 0;
+    }
+
+    .top-student-card .badge {
+        font-size: 0.9rem;
+        color: #2A4494;
+        background: #FFB74D;
+        padding: 0.3rem 0.8rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .stats p {
+        font-size: 0.9rem;
+        margin: 0.3rem 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .stats i {
+        color: #2A4494;
+    }
+
+    .no-results {
+        font-size: 1rem;
+        color: #7A85A1;
+        text-align: center;
+        margin: 2rem 0;
+    }
+
+    .leaderboard-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+
+    .leaderboard-table th,
+    .leaderboard-table td {
+        padding: 0.8rem;
+        text-align: left;
+        font-size: 0.9rem;
+        color: #1F2A44;
+    }
+
+    .leaderboard-table th {
+        background: #F8F9FA;
+        font-weight: 600;
+    }
+
+    .leaderboard-table tr {
+        border-bottom: 1px solid #E9ECEF;
+        transition: background 0.3s;
+    }
+
+    .leaderboard-table tr:hover {
+        background: #F5F7FA;
+    }
+
+    /* Footer */
+    .footer {
+        flex-shrink: 0;
+        background: #1F2A44;
+        padding: 4rem 2rem;
+        color: #F5F7FA;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        max-width: 95vw;
+        margin: 0 auto;
+    }
+
+    .footer-section h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #F8A488;
+        margin-bottom: 1rem;
+    }
+
+    .footer-section p,
+    .footer-section a {
+        font-size: 1rem;
+        color: #F5F7FA;
+        text-decoration: none;
+        margin: 0.5rem 0;
+    }
+
+    .footer-section a:hover {
+        color: #FFB74D;
+    }
+
+    .footer-bottom {
+        text-align: center;
+        font-size: 0.9rem;
+        padding-top: 2rem;
+        opacity: 0.8;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 1024px) {
+        .leaderboard-container {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .top-students {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .top-student-card {
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .top-student-card.rank-1 {
+            transform: none;
+        }
+    }
+
+    @media (max-width: 768px) {
+
+        .leaderboard-section {
+            padding: 2rem 0.5rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+        }
+
+        .mobile-filter-toggle {
+            display: block;
+        }
+
+        .filter-form {
+            display: none;
+        }
+
+        .filter-form.active {
+            display: block;
+        }
+
+        .leaderboard-table {
+            display: block;
+            overflow-x: auto;
+        }
+
+        .leaderboard-table th,
+        .leaderboard-table td {
+            min-width: 100px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+        }
+
+        .filter-group select,
+        .filter-btn,
+        .reset-btn {
+            font-size: 0.8rem;
+            padding: 0.5rem;
+        }
+
+        .top-student-card {
+            padding: 1rem;
+        }
+
+        .top-student-card h3 {
+            font-size: 1.1rem;
+        }
+
+        .stats p {
+            font-size: 0.8rem;
+        }
+
+        .leaderboard-table th,
+        .leaderboard-table td {
+            font-size: 0.8rem;
+            padding: 0.5rem;
+        }
+    }
+</style>
+
+<!-- Scripts -->
+<script>
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true
+    });
+
+    // Mobile Filter Toggle
+    const filterToggle = document.querySelector('.mobile-filter-toggle');
+    const filterForm = document.querySelector('.filter-form');
+
+    if (filterToggle) {
+        filterToggle.addEventListener('click', () => {
+            filterForm.classList.toggle('active');
+            filterToggle.textContent = filterForm.classList.contains('active')
+                ? 'Hide Filters'
+                : 'Filters';
+        });
+    }
+
+    // Show loading spinner on filter submission
+    const filterFormElement = document.getElementById('filter-form');
+    const filterSpinner = document.getElementById('filter-spinner');
+    const applyFiltersBtn = document.querySelector('.filter-btn');
+
+    filterFormElement.addEventListener('submit', () => {
+        applyFiltersBtn.disabled = true;
+        filterSpinner.style.display = 'block';
+    });
+</script>
+{% endblock %}

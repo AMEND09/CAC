@@ -1,0 +1,258 @@
+{% load static %}
+<header class="nav">
+    <div class="nav-container">
+        <a href="{% url 'student' %}" class="nav-logo">ServeSync</a>
+        <div class="nav-links">
+            <a href="{% url 'studentlistings' %}">Listings</a>
+            <a href="{% url 'studentorgview' %}">Organizations</a>
+            <a href="{% url 'leaderboard' %}">Leaderboard</a>
+            <a href="{% url 'studentcontact' %}">Contact</a>
+        </div>
+        <div class="nav-actions">
+            <!-- Notifications Dropdown (Desktop Only) -->
+            <button class="dropdown-buttons notifications-btn">
+                <i class="fas fa-envelope"></i>
+            </button>
+            <div id="notification-modal">
+                <h3>Notifications</h3>
+                <ul class="dropdown-menus">
+                    {% if user.notifications.all %}
+                        {% for notification in user.notifications.all %}
+                        <li class="{% if notification.is_read %}read{% else %}unread{% endif %}">
+                            {{ notification.message|default:"No message available" }}
+                        </li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No notifications available.</li>
+                    {% endif %}
+                </ul>
+                <button style="background-color: transparent;" class="close-btn"><i class="fa-solid fa-x"></i></button>
+            </div>
+            <!-- User Dropdown -->
+            <div class="dropdown">
+                <button class="dropdown-buttons"><i class="fas fa-user"></i></button>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url 'setting' %}">Settings</a></li>
+                    <li><a href="{% url 'stats' %}">Stats</a></li>
+                    <li><a href="{% url 'logouts' %}" style="color: red;">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+        <button class="nav-mobile-btn">☰</button>
+        <div class="nav-mobile-menu">
+            <div class="nav-links">
+                <center>
+                    <a href="{% url 'studentlistings' %}">Listings</a>
+                    <a href="{% url 'studentorgview' %}">Organizations</a>
+                    <a href="{% url 'studentcontact' %}">Contact</a>
+                    <a href="{% url 'leaderboard' %}">Leaderboard</a>
+                    <a href="{% url 'setting' %}">Settings</a>
+                    <a href="{% url 'stats' %}">Stats</a>
+                    <a href="{% url 'logouts' %}" class="logout" style="color: red; border: 1px solid red; padding: 10px 10px; border-radius: 10px; width: 30%;">Logout</a>
+                </center>
+            </div>
+        </div>
+    </div>
+</header>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Navigation */
+    .nav {
+        width: 100%;
+        background: linear-gradient(to right, #2A4494, #1F2A44);
+        padding: 1rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+    .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .nav-logo {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #F5F7FA;
+        text-decoration: none;
+    }
+    .nav-logo:hover { color: #F8A488; }
+    .nav-links {
+        display: flex;
+        align-items: center;
+    }
+    .nav-links a {
+        color: #F5F7FA;
+        text-decoration: none;
+        margin-left: 2rem;
+        font-weight: 400;
+        transition: color 0.3s;
+    }
+
+    .nav-links a.logout:hover {
+        scale: 1.05;
+        transition: 0.2s;
+    }
+
+    .nav-links a:hover { color: #F8A488; }
+    .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .dropdown-buttons {
+        background-color: transparent;
+        border: none;
+        color: #F5F7FA;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 10px;
+    }
+    .dropdown-buttons a { color: #F5F7FA; text-decoration: none; }
+    .dropdown-buttons:hover { color: #F8A488; }
+    .dropdown {
+        position: relative;
+    }
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: 35px;
+        right: 0;
+        background-color: #1F2A44;
+        list-style: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+    .dropdown-menu li {
+        padding: 5px 15px;
+    }
+    .dropdown-menu li a {
+        font-size: 16px;
+        color: #F5F7FA;
+        text-decoration: none;
+        display: block;
+        transition: color 0.3s ease;
+    }
+    .dropdown-menu li a:hover { color: #F8A488; }
+    .dropdown:hover .dropdown-menu { display: block; }
+
+    /* Notifications Modal (Desktop Only) */
+    #notification-modal {
+        display: none;
+        position: absolute;
+        top: 50px;
+        right: 0;
+        width: 300px;
+        max-height: 400px;
+        background: #1F2A44;
+        color: #F5F7FA;
+        border-radius: 8px;
+        padding: 15px;
+        z-index: 1000;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+    #notification-modal h3 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        color: #F8A488;
+    }
+    .dropdown-menus {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        overflow-y: auto;
+        max-height: 320px;
+    }
+    .dropdown-menus li {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 10px 0;
+        font-size: 0.9rem;
+    }
+    .dropdown-menus li.read { opacity: 0.6; }
+    .dropdown-menus li.unread { font-weight: 600; }
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: transparent;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px;
+        cursor: pointer;
+    }
+    .close-btn:hover { color: #F8A488; }
+
+    /* Mobile Styles */
+    .nav-mobile-btn {
+        display: none;
+        background: none;
+        border: none;
+        color: #F5F7FA;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+    .nav-mobile-menu {
+        display: none;
+        background: transparent;
+        padding: 1rem;
+        width: 100%;
+    }
+    .nav-mobile-menu.active { display: block; }
+    .nav-mobile-menu .nav-links a {
+        display: block;
+        margin: 0.5rem 0;
+    }
+
+    @media (max-width: 768px) {
+        .nav-mobile-btn { display: block; }
+        .nav-links, .nav-actions { display: none; }
+        .nav-container { justify-content: space-between; }
+        .nav-mobile-menu.active .nav-links { display: block; }
+        .notifications-btn, #notification-modal { display: none; }
+    }
+</style>
+
+<script>
+    // Mobile Menu Toggle
+    const mobileBtn = document.querySelector('.nav-mobile-btn');
+    const mobileMenu = document.querySelector('.nav-mobile-menu');
+    if (mobileBtn && mobileMenu) {
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+    }
+
+    // Notifications Dropdown (Desktop Only)
+    if (window.innerWidth > 768) {
+        const notificationButton = document.querySelector('.notifications-btn');
+        const notificationModal = document.getElementById('notification-modal');
+        const closeButton = notificationModal ? notificationModal.querySelector('.close-btn') : null;
+
+        if (notificationButton && notificationModal && closeButton) {
+            notificationButton.addEventListener('click', () => {
+                notificationModal.style.display = notificationModal.style.display === 'block' ? 'none' : 'block';
+            });
+
+            closeButton.addEventListener('click', () => {
+                notificationModal.style.display = 'none';
+            });
+        }
+    }
+
+    // Handle window resize to collapse mobile menu on desktop view
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && mobileMenu.classList.contains('active')) {
+            mobileMenu.classList.remove('active');
+        }
+    });
+</script>

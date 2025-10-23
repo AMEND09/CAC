@@ -1,0 +1,292 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - ServeSync</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css"/>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</head>
+<body>
+    <!-- Include Navigation Bar -->
+    {% include 'website/student_nav.html' %}
+
+    <!-- Main Content -->
+    <main>
+        <section class="contact-section">
+            <h1 data-aos="fade-down">Contact Us</h1>
+            <div class="contact-container" data-aos="fade-up">
+                <form class="contact-form" method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="full_name" placeholder="Full Name" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <textarea name="message" placeholder="Your Message" rows="4" required></textarea>
+                    <center><button type="submit">Submit</button></center>
+                    {% for message in messages %}
+                        <p class="success-message">{{ message }}</p>
+                    {% endfor %}
+                </form>
+            </div>
+
+            
+
+            <!-- Aesthetic Section -->
+            <div class="aesthetic-section" data-aos="fade-in">
+                <div class="aesthetic-content">
+                    <h2>Join Us in Making a Difference</h2>
+                    <p>
+                        At ServeSync, we connect passionate individuals with meaningful opportunities to create lasting impact in communities. Reach out today and be part of the change!
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>ServeSync</h3>
+                <p>Connecting passion with purpose.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: <a href="mailto:servesyncinc@gmail.com">servesyncinc@gmail.com</a></p>
+                <p>Instagram: <a target="_blank" href="https://www.instagram.com/serve.sync/">@serve.sync</a></p>
+            </div>
+        </div>
+        <p class="footer-bottom">© 2025 ServeSync. All rights reserved.</p>
+    </footer>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        body {
+            background: #F5F7FA;
+            color: #1F2A44;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding-top: 4rem;
+            background: #F5F7FA;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #2A4494;
+            margin-bottom: 3rem;
+        }
+
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+            margin-bottom: 6rem;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            padding-bottom: 100px;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: 1px solid #1F2A44;
+            border-radius: 5px;
+            background: transparent;
+            color: #1F2A44;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: #F8A488;
+        }
+
+        .contact-form textarea {
+            resize: vertical;
+        }
+
+        .contact-form button {
+            padding: 0.8rem;
+            background: #FFB74D;
+            color: #1F2A44;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            width: 30%;
+        }
+
+        .contact-form button:hover {
+            background: #F8A488;
+            transform: scale(1.05);
+        }
+
+        .success-message {
+            text-align: center;
+            color: #2A4494;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+
+        /* Wave Container - New Addition */
+        .wave-container {
+            width: 100%;
+            line-height: 0;
+            overflow: hidden;
+            display: block;
+            margin-bottom: -2px; /* Fix gap between wave and colored section */
+        }
+
+        .wave-container svg {
+            display: block;
+            width: 100%;
+            height: 150px;
+        }
+
+        /* Aesthetic Section */
+        .aesthetic-section {
+            border-radius: 25px;
+            position: relative;
+            background: #2A4494; /* Match the wave color */
+            padding: 4rem 2rem;
+            margin: 25px;
+            text-align: center;
+            color: #F5F7FA; /* Changed text color for better contrast */
+            width: calc(100% - 25px);
+        }
+
+        .aesthetic-content {
+            position: relative;
+            z-index: 5;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .aesthetic-content h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #FFB74D; /* Changed for better contrast on dark background */
+        }
+
+        .aesthetic-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer {
+            flex-shrink: 0;
+            background: #1F2A44;
+            padding: 4rem 2rem;
+            color: #F5F7FA;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section h3 {
+            font-size: 1.5rem;
+            color: #F8A488;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            font-size: 1rem;
+            color: #F5F7FA;
+            text-decoration: none;
+            margin: 0.5rem 0;
+        }
+
+        .footer-section a:hover {
+            color: #FFB74D;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            font-size: 0.9rem;
+            padding-top: 2rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .contact-section {
+                padding: 2rem 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .contact-form input,
+            .contact-form textarea {
+                width: 100%;
+            }
+
+            .wave-container svg {
+                height: 70px; /* Smaller height for mobile */
+            }
+
+            .aesthetic-section {
+                padding: 3rem 1rem;
+            }
+
+            .aesthetic-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .aesthetic-content p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,391 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Information - ServeSync</title>
+    <link rel="icon" type="image/png" href="{% static 'logo.jpg' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css"/>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</head>
+<body>
+    <!-- Include Navigation Bar -->
+    {% include 'website/student_nav.html' %}
+
+    <!-- Main Content -->
+    <main>
+        <section class="account-section">
+            <h1 data-aos="fade-down">Account Information</h1>
+            <div class="account-container" data-aos="fade-up">
+                <form method="POST" enctype="multipart/form-data" class="account-form">
+                    {% csrf_token %}
+
+                    <label>First Name:</label>
+                    <input type="text" name="first_name" value="{{ student.first_name }}" required>
+
+                    <label>Last Name:</label>
+                    <input type="text" name="last_name" value="{{ student.last_name }}" required>
+
+                    <label>School:</label>
+                    <input type="text" name="school" value="{{ student.school }}">
+
+                    <label>Email:</label>
+                    <input type="email" name="email" value="{{ student.email }}" readonly>
+
+                    <label>Phone:</label>
+                    <input type="text" name="phone" value="{{ student.phone }}">
+
+                    <label>Age:</label>
+                    <input type="number" name="age" value="{{ student.age }}" min="1" required>
+
+                    <label>Bio:</label>
+                    <textarea name="bio" rows="4">{{ student.bio }}</textarea>
+
+                    <label>Interests:</label>
+                    <textarea name="interests" rows="4">{{ student.interests }}</textarea>
+
+                    <button type="submit">Update</button>
+                    {% for message in messages %}
+                        <p class="success-message">{{ message }}</p>
+                    {% endfor %}
+                </form>
+            </div>
+
+           
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>ServeSync</h3>
+                <p>Connecting passion with purpose.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: <a href="mailto:servesyncinc@gmail.com">servesyncinc@gmail.com</a></p>
+                <p>Instagram: <a target="_blank" href="https://www.instagram.com/serve.sync/">@serve.sync</a></p>
+            </div>
+        </div>
+        <p class="footer-bottom">© 2025 ServeSync. All rights reserved.</p>
+    </footer>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background: #F5F7FA;
+            color: #1F2A44;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+
+        /* Account Section */
+        .account-section {
+            padding: 4rem 2rem;
+            background: #F5F7FA;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #2A4494;
+            margin-bottom: 3rem;
+        }
+
+        .account-container {
+            max-width: 800px;
+            margin: 0 auto;
+            margin-bottom: 4rem;
+        }
+
+        .account-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .account-form label {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #1F2A44;
+        }
+
+        .account-form input,
+        .account-form textarea {
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: 1px solid #1F2A44;
+            border-radius: 5px;
+            background: transparent;
+            color: #1F2A44;
+        }
+
+        .account-form input:focus,
+        .account-form textarea:focus {
+            outline: none;
+            border-color: #F8A488;
+        }
+
+        .account-form input[readonly] {
+            background: #e3e3e3;
+            cursor: not-allowed;
+        }
+
+        .account-form textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .account-form button {
+            padding: 0.8rem;
+            background: #FFB74D;
+            color: #1F2A44;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .account-form button:hover {
+            background: #F8A488;
+            transform: scale(1.05);
+        }
+
+        .success-message {
+            text-align: center;
+            color: #2A4494;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+
+        /* Profile Picture */
+        .profile-picture-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-picture-label {
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+        }
+
+        #profile-picture-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #2A4494;
+            transition: transform 0.3s;
+        }
+
+        .profile-picture-label:hover #profile-picture-preview {
+            transform: scale(1.05);
+        }
+
+        .edit-icon {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background-color: #FFB74D;
+            color: #1F2A44;
+            border-radius: 50%;
+            padding: 8px;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .edit-icon:hover {
+            background-color: #F8A488;
+        }
+
+        #profile_picture {
+            display: none;
+        }
+
+        /* Aesthetic Section */
+        .aesthetic-section {
+            position: relative;
+            background: linear-gradient(to bottom, #FFB74D, #F8A488);
+            padding: 6rem 2rem;
+            text-align: center;
+            color: #1F2A44;
+            overflow: hidden;
+        }
+
+        .aesthetic-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .aesthetic-content h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #1F2A44;
+        }
+
+        .aesthetic-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+
+        .wave {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            z-index: 0;
+        }
+
+        .wave svg {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 200px;
+        }
+
+        /* Footer */
+        .footer {
+            flex-shrink: 0;
+            background: #1F2A44;
+            padding: 4rem 2rem;
+            color: #F5F7FA;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section h3 {
+            font-size: 1.5rem;
+            color: #F8A488;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            font-size: 1rem;
+            color: #F5F7FA;
+            text-decoration: none;
+            margin: 0.5rem 0;
+        }
+
+        .footer-section a:hover {
+            color: #FFB74D;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            font-size: 0.9rem;
+            padding-top: 2rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .account-section {
+                padding: 2rem 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .account-form input,
+            .account-form textarea {
+                width: 100%;
+            }
+
+            .account-form button {
+                width: 100%;
+            }
+
+            .profile-picture-wrapper {
+                margin-bottom: 1.5rem;
+            }
+
+            #profile-picture-preview {
+                width: 120px;
+                height: 120px;
+            }
+
+            .aesthetic-section {
+                padding: 4rem 1rem;
+            }
+
+            .wave {
+                height: 120px;
+            }
+
+            .wave svg {
+                height: 120px;
+            }
+
+            .aesthetic-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .aesthetic-content p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Profile Picture Preview
+        document.getElementById('profile_picture').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profile-picture-preview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

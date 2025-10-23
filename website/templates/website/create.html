@@ -1,0 +1,485 @@
+{% load static %}
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}ServeSync{% endblock %}</title>
+        <link rel="icon" type="image/png" href="{% static 'logo.jpg' %}">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+        <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    </head>
+<body>
+{% include 'website/org_nav.html' %}
+<section class="create-section">
+    <h1 data-aos="fade-down">Create a New Volunteer Opportunity</h1>
+    {% for message in messages %}
+        <h3 class="message" data-aos="fade-up">{{ message }}</h3>
+    {% endfor %}
+    <form method="POST" class="create-form" data-aos="fade-up" data-aos-delay="100">
+        {% csrf_token %}
+        <!-- Title -->
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" placeholder="Enter title" required>
+        </div>
+        <!-- Description -->
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4" placeholder="Enter description" required></textarea>
+        </div>
+        <!-- Address with Autocomplete Dropdown -->
+        <div class="form-group">
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address" placeholder="Enter address" required>
+        </div>
+        <!-- Date & Time -->
+        <div class="form-group">
+            <label for="time">Date & Time</label>
+            <input type="datetime-local" id="time" name="time" required>
+        </div>
+        <!-- Skills Required -->
+        <div class="form-group">
+            <label for="skills_required">Skills Required</label>
+            <textarea id="skills_required" name="skills_required" rows="3" placeholder="List required skills" required></textarea>
+        </div>
+        <!-- Age Requirement -->
+        <div class="form-group">
+            <label for="age_requirement">Age Requirement</label>
+            <input type="number" id="age_requirement" name="age_requirement" placeholder="Enter age requirement" required>
+        </div>
+        <!-- Hours Expected -->
+        <div class="form-group">
+            <label for="hours_expected">Number of Hours Expected</label>
+            <input type="text" id="hours_expected" name="hours_expected" placeholder="Enter hours expected (exact number or range)" required>
+        </div>
+        <!-- Category -->
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" name="category" required>
+                <option value="" disabled selected>Select a category</option>
+                <option value="Community & Social Services">Community & Social Services</option>
+                <option value="Education & Literacy">Education & Literacy</option>
+                <option value="Health & Wellness">Health & Wellness</option>
+                <option value="Environmental & Conservation">Environmental & Conservation</option>
+                <option value="Animal Welfare">Animal Welfare</option>
+                <option value="Arts, Culture & Heritage">Arts, Culture & Heritage</option>
+                <option value="International & Global Causes">International & Global Causes</option>
+                <option value="Sports & Recreation">Sports & Recreation</option>
+                <option value="Human Rights & Advocacy">Human Rights & Advocacy</option>
+                <option value="Emergency & Disaster Relief">Emergency & Disaster Relief</option>
+                <option value="Religious & Faith-Based">Religious & Faith-Based</option>
+                <option value="Technology & Innovation">Technology & Innovation</option>
+                <option value="Civic & Public Service">Civic & Public Service</option>
+                <option value="Business, Leadership & Professional Development">Business, Leadership & Professional Development</option>
+                <option value="Youth & Children Services">Youth & Children Services</option>
+                <option value="Senior Citizens Support">Senior Citizens Support</option>
+                <option value="Special Events & Fundraising">Special Events & Fundraising</option>
+                <option value="Skill-Based Volunteering">Skill-Based Volunteering</option>
+                <option value="Media & Communications">Media & Communications</option>
+                <option value="Military & Veterans Support">Military & Veterans Support</option>
+            </select>
+        </div>
+        <input type="text" id="email" name="email" value="{{ request.user.email }}" required hidden>
+        <button type="submit" class="submit-btn" data-aos="fade-up" data-aos-delay="100">Create Opportunity</button>
+    </form>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-grid">
+        <div class="footer-section">
+            <h3>ServeSync</h3>
+            <p>Connecting organizations with passionate volunteers.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Contact</h3>
+            <p>Email: <a href="mailto:servesyncinc@gmail.com">servesyncinc@gmail.com</a></p>
+            <p>Instagram: <a target="_blank" href="https://www.instagram.com/serve.sync/">@serve.sync</a></p>
+            <p>Location: Louisville, Kentucky</p>
+        </div>
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <p><a href="#volunteering">About</a></p>
+            <p><a href="#tutorial">Tutorial</a></p>
+            <p><a href="#faq">FAQ</a></p>
+        </div>
+    </div>
+    <p class="footer-bottom">© 2025 ServeSync. All rights reserved.</p>
+</footer>
+
+<!-- Styles -->
+<style>
+    /* General Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+        background: #F5F7FA;
+        color: #1F2A44;
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    main {
+        flex: 1 0 auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Create Section */
+    .create-section {
+        padding: 3rem 1rem;
+        background: #F5F7FA;
+        flex: 1;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: #2A4494;
+        margin-bottom: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .message {
+        color: #F8A488;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .create-form {
+        max-width: 800px;
+        margin: 0 auto;
+        background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+        text-align: left;
+        position: relative;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2A4494;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 0.8rem;
+        font-size: 1rem;
+        border: 1px solid #C4C9D4;
+        border-radius: 8px;
+        background: #F5F7FA;
+        color: #1F2A44;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        border-color: #FFB74D;
+        box-shadow: 0 0 5px rgba(255, 183, 77, 0.5);
+        outline: none;
+    }
+
+    .form-group textarea {
+        resize: vertical;
+    }
+
+    .form-group select option:disabled {
+        color: #7A85A1;
+    }
+
+    .suggestions {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #F5F7FA;
+        border: 1px solid #C4C9D4;
+        border-radius: 8px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 10;
+        display: none;
+    }
+
+    .suggestions.active {
+        display: block;
+    }
+
+    .suggestion-item {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        color: #1F2A44;
+        cursor: pointer;
+        transition: background 0.3s, color 0.3s;
+    }
+
+    .suggestion-item:hover {
+        background: #FFB74D;
+        color: #1F2A44;
+    }
+
+    .submit-btn {
+        display: inline-block;
+        padding: 0.8rem 2rem;
+        background: #2A4494;
+        color: #F5F7FA;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+    }
+
+    .submit-btn:hover {
+        background: #FFB74D;
+        color: #1F2A44;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Aesthetic Section */
+    .aesthetic-section {
+        position: relative;
+        background: linear-gradient(to bottom, #FFB74D, #F8A488);
+        padding: 6rem 2rem;
+        text-align: center;
+        color: #1F2A44;
+        overflow: hidden;
+    }
+
+    .aesthetic-content {
+        max-width: 95vw;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .aesthetic-content h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #1F2A44;
+    }
+
+    .aesthetic-content p {
+        font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 1.8;
+        opacity: 0.9;
+    }
+
+    .wave {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 200px;
+        z-index: 0;
+    }
+
+    .wave svg {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 200px;
+    }
+
+    /* Footer */
+    .footer {
+        flex-shrink: 0;
+        background: #1F2A44;
+        padding: 4rem 2rem;
+        color: #F5F7FA;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        max-width: 95vw;
+        margin: 0 auto;
+    }
+
+    .footer-section h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #F8A488;
+        margin-bottom: 1rem;
+    }
+
+    .footer-section p,
+    .footer-section a {
+        font-size: 1rem;
+        color: #F5F7FA;
+        text-decoration: none;
+        margin: 0.5rem 0;
+    }
+
+    .footer-section a:hover {
+        color: #FFB74D;
+    }
+
+    .footer-bottom {
+        text-align: center;
+        font-size: 0.9rem;
+        padding-top: 2rem;
+        opacity: 0.8;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .create-section {
+            padding: 2rem 0.5rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+        }
+
+        .create-form {
+            padding: 1.5rem;
+        }
+
+        .form-group label {
+            font-size: 1rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            font-size: 0.9rem;
+        }
+
+        .suggestions {
+            max-height: 150px;
+        }
+
+        .submit-btn {
+            padding: 0.7rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        .aesthetic-section {
+            padding: 4rem 1rem;
+        }
+
+        .wave {
+            height: 120px;
+        }
+
+        .wave svg {
+            height: 120px;
+        }
+
+        .aesthetic-content h2 {
+            font-size: 1.6rem;
+        }
+
+        .aesthetic-content p {
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 1.8rem;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+        }
+
+        .submit-btn {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+<!-- Scripts -->
+<script>
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true
+    });
+
+    // Initialize Google Places Autocomplete
+    document.addEventListener('DOMContentLoaded', () => {
+        const addressInput = document.getElementById('address');
+        const suggestionsDiv = document.getElementById('address-suggestions');
+        const latitudeInput = document.getElementById('latitude');
+        const longitudeInput = document.getElementById('longitude');
+
+        // Initialize Google Places Autocomplete
+        const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+            types: ['address'],
+            fields: ['formatted_address', 'geometry'],
+            componentRestrictions: { country: ['us'] } // Restrict to US for ServeSync
+        });
+
+        // Listener for place selection
+        autocomplete.addListener('place_changed', () => {
+            const place = autocomplete.getPlace();
+            if (place.formatted_address && place.geometry) {
+                addressInput.value = place.formatted_address;
+                latitudeInput.value = place.geometry.location.lat();
+                longitudeInput.value = place.geometry.location.lng();
+                suggestionsDiv.innerHTML = '';
+                suggestionsDiv.classList.remove('active');
+            }
+        });
+
+        // Clear suggestions when input is cleared
+        addressInput.addEventListener('input', () => {
+            suggestionsDiv.innerHTML = '';
+            suggestionsDiv.classList.remove('active');
+            if (!addressInput.value.trim()) {
+                latitudeInput.value = '';
+                longitudeInput.value = '';
+            }
+        });
+
+        // Close suggestions on click outside
+        document.addEventListener('click', (e) => {
+            if (!addressInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+                suggestionsDiv.innerHTML = '';
+                suggestionsDiv.classList.remove('active');
+            }
+        });
+    });
+</script>
+</body>
+</html>
+{% endblock %}

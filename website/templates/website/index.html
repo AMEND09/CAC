@@ -1,0 +1,1165 @@
+{% extends 'website/base.html' %}
+{% load static %}
+{% block title %}ServeSync - Home{% endblock %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServeSync - Organization Dashboard</title>
+    <link rel="icon" type="image/png" href="{% static 'logo.jpg' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
+</head>
+    <!-- Hero Section with Video Background -->
+    <section class="hero">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="{% static 'website/hero-background.mp4' %}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Discover Volunteer Magic</h1>
+            <p>Unleash your potential with ServeSync.</p>
+            <a href="{% url 'register' %}" class="btn">Join Now</a>
+        </div>
+        <div class="hero-dots">
+            <span class="dot active" data-slide="0"></span>
+            <span class="dot" data-slide="1"></span>
+            <span class="dot" data-slide="2"></span>
+        </div>
+        <button class="hero-arrow left-arrow"><i class="fa-solid fa-chevron-left"></i></button>
+        <button class="hero-arrow right-arrow"><i class="fa-solid fa-chevron-right"></i></button>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <h2>How It Works</h2>
+        <div class="how-it-works-container">
+            <div class="sidebar">
+                <div class="step-item active" data-step="0">
+                    <span class="step-number">1</span>
+                    <h3>Sign Up</h3>
+                </div>
+                <div class="step-item" data-step="1">
+                    <span class="step-number">2</span>
+                    <h3>Connect</h3>
+                </div>
+                <div class="step-item" data-step="2">
+                    <span class="step-number">3</span>
+                    <h3>Impact</h3>
+                </div>
+            </div>
+            <div class="description-area">
+                <div style="
+                background-color: #F5F7FA;
+                border: 3px solid #FFB74D;
+                border-radius: 20px;
+                padding: 20px 20px;" class="description" data-step="0">
+                    <h3>Sign Up</h3>
+                    <p>Create your profile as a student or organization. It’s quick and easy—just use your JCPS email or organization details to get started.</p>
+                </div>
+                <div style="
+                background-color: #F5F7FA;
+                border: 3px solid #FFB74D;
+                border-radius: 20px;
+                padding: 20px 20px;" class="description" data-step="1">
+                    <h3>Connect</h3>
+                    <p>Browse available volunteer opportunities as a student, or post your own as an organization. Find the perfect match for your skills and interests.</p>
+                </div>
+                <div style="
+                background-color: #F5F7FA;
+                border: 3px solid #FFB74D;
+                border-radius: 20px;
+                padding: 20px 20px;" class="description" data-step="2">
+                    <h3>Impact</h3>
+                    <p>Volunteer, track your hours through our dashboard, and earn badges as you make a difference in your community.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section (Redesigned) -->
+    <section class="about-us">
+        <h2>Meet The Creator</h2>
+        <div class="about-us-content">
+            <div style="margin-bottom: 20px;" class="about-us-image">
+                <img src="{% static 'icon.png' %}" alt="About Us">
+            </div>
+            <div class="about-us-text">
+                <h2>Rahbe Abass</h2>
+                <p>I’m Rahbe Abass, a rising senior at DuPont Manual High School in Louisville, Kentucky, with a passion for coding and software development. Driven to use my skills for good, I created ServeSync, a platform that connects volunteers like you with meaningful community opportunities. ServeSync makes it easy to find and join local volunteer events based on your interests and schedule, while helping organizations share their needs. Together, we’re building stronger communities, one connection at a time!</p>
+                <div class="social-buttons">
+    <a href="mailto:rahbeabass@gmail.com" class="social-btn email" aria-label="Email Rahbe Abass">
+        <i class="fa-solid fa-envelope"></i>
+    </a>
+    <a href="https://github.com/RahbeA" class="social-btn github" target="_blank">
+        <i class="fa-brands fa-github"></i>
+    </a>
+    <a href="https://www.linkedin.com/in/rahbe-abass-1a707132a/" class="social-btn linkedin" aria-label="Rahbe Abass LinkedIn" target="_blank">
+        <i class="fa-brands fa-linkedin-in"></i>
+    </a>
+</div>
+            </div>
+        </div>
+    </section>
+
+
+   <center>
+    <h2 style="
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: #2A4494;
+        margin-bottom: 3rem;
+        margin-top: 3rem;">Our Testimonials</h2>
+</center>
+<div class="container" id="infiniteScroll--left">
+    <article class="testimonial">
+        <div class="wrapper">
+            <div class="testimonial-content">
+                <p>"ServeSync made volunteering so easy and rewarding. I’ve already earned my first badge!"</p>
+                <h4>~ Sarah M., Student</h4>
+                <div class="testimonial-icon"><i class="fa-solid fa-quote-left"></i></div>
+            </div>
+        </div>
+    </article>
+    <article class="testimonial">
+        <div class="wrapper">
+            <div class="testimonial-content">
+                <p>"Connecting with students through ServeSync has transformed our outreach efforts."</p>
+                <h4>~ GreenFuture Org</h4>
+                <div class="testimonial-icon"><i class="fa-solid fa-quote-left"></i></div>
+            </div>
+        </div>
+    </article>
+    <article class="testimonial">
+        <div class="wrapper">
+            <div class="testimonial-content">
+                <p>"Tracking my impact to do more keeps me motivated. Amazing platform!"</p>
+                <h4>~ James T.</h4>
+                <div class="testimonial-icon"><i class="fa-solid fa-quote-left"></i></div>
+            </div>
+        </div>
+    </article>
+    <article class="testimonial">
+        <div class="wrapper">
+            <div class="testimonial-content">
+                <p>"ServeSync helped me find meaningful opportunities that align with my passions."</p>
+                <h4>~ Emily R.</h4>
+                <div class="testimonial-icon"><i class="fa-solid fa-quote-left"></i></div>
+            </div>
+        </div>
+    </article>
+    <article class="testimonial">
+        <div class="wrapper">
+            <div class="testimonial-content">
+                <p>"The platform’s ease of use has made managing volunteers easier."</p>
+                <h4>~ CommunityCare</h4>
+                <div class="testimonial-icon"><i class="fa-solid fa-quote-left"></i></div>
+            </div>
+        </div>
+    </article>
+    <article class="testimonial">
+        <div class="wrapper">
+            <div class="testimonial-content">
+                <p>"ServeSync made volunteering so easy and rewarding. I’ve already earned my first badge!"</p>
+                <h4>~ Sarah M., Student</h4>
+                <div class="testimonial-icon"><i class="fa-solid fa-quote-left"></i></div>
+            </div>
+        </div>
+    </article>
+</div>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-list">
+            <div class="faq-item">
+                <h3 class="faq-question">How do I sign up?</h3>
+                <p class="faq-answer">Click "Sign Up" and follow the steps to create your account using your JCPS email or organization details.</p>
+            </div>
+            <div class="faq-item">
+                <h3 class="faq-question">Who can volunteer?</h3>
+                <p class="faq-answer">JCPS students with a valid school email can join as volunteers.</p>
+            </div>
+            <div class="faq-item">
+                <h3 class="faq-question">How are volunteer hours tracked?</h3>
+                <p class="faq-answer">Organizations verify your hours after completion, and you can view them in your dashboard.</p>
+            </div>
+            <div class="faq-item">
+                <h3 class="faq-question">Can organizations post opportunities?</h3>
+                <p class="faq-answer">Yes, verified organizations can post volunteer opportunities directly on the platform.</p>
+            </div>
+            <div class="faq-item">
+                <h3 class="faq-question">Is ServeSync free to use?</h3>
+                <p class="faq-answer">Yes, ServeSync is free for both students and organizations to join and use.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call-to-Action Banner -->
+    <center style="margin: 80px 0;">
+        <section style="width: 95%; border-radius: 10px;" class="cta-banner">
+            <h2>Ready to Make an Impact?</h2>
+            <p>Join ServeSync today and start your volunteering journey.</p>
+            <a href="{% url 'register_choice' %}" class="btn">Sign Up Now</a>
+        </section>
+    </center>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>ServeSync</h3>
+                <p>Connecting passion with purpose.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Links</h3>
+                <a href="{% url 'register' %}">Student Signup</a><br>
+                <a href="{% url 'organization_register' %}">Organization Signup</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: servesyncinc@gmail.com</p>
+            </div>
+        </div>
+        <p class="footer-bottom">© 2025 ServeSync. All rights reserved.</p>
+    </footer>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        .social-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background-color: #2A4494;
+    color: #F5F7FA;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 1.5rem;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.social-btn:hover {
+    background-color: #FFB74D;
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .social-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .social-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+    }
+}
+
+        body {
+            background: #F5F7FA;
+            color: #1F2A44;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .nav {
+            width: 100%;
+            background: linear-gradient(to right, #2A4494, #1F2A44);
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #F5F7FA;
+            text-decoration: none;
+        }
+        .nav-logo:hover { color: #F8A488; }
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+        .nav-links a {
+            color: #F5F7FA;
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 400;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: #F8A488; }
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .dropdown-buttons {
+            background-color: transparent;
+            border: none;
+            color: #F5F7FA;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .dropdown-buttons a { color: #F5F7FA; text-decoration: none; }
+        .dropdown-buttons:hover { color: #F8A488; }
+        .register-btn .btn { margin: 0; }
+        .nav-mobile-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #F5F7FA;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .nav-mobile-menu {
+            display: none;
+            background: #1F2A44;
+            padding: 1rem;
+            width: 100%;
+        }
+        .nav-mobile-menu.active { display: block; }
+        .nav-mobile-menu a {
+            display: block;
+            color: #F5F7FA;
+            text-decoration: none;
+            padding: 0.5rem 0;
+        }
+        .nav-mobile-menu a:hover { color: #F8A488; }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            background: #FFB74D;
+            color: #1F2A44;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s, background 0.3s;
+        }
+        .btn:hover {
+            background: #F8A488;
+            transform: scale(1.05);
+        }
+        .btn-small {
+            padding: 0.6rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(31, 42, 68, 0.5);
+            z-index: 2;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            color: #F5F7FA;
+            height: 100%;
+        }
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .hero-content p {
+            font-size: 1.8rem;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        .hero-content .btn {
+            background: #FFB74D;
+            color: #1F2A44;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+        }
+        .hero-content .btn:hover {
+            background: #F8A488;
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        .hero-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 3;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            background: #F5F7FA;
+            border-radius: 50%;
+            opacity: 0.5;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.3s;
+        }
+        .dot.active {
+            opacity: 1;
+            transform: scale(1.2);
+            background: #FFB74D;
+        }
+        .hero-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            color: #F5F7FA;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 3;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .hero-arrow:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-50%) scale(1.1);
+        }
+        .left-arrow { left: 20px; }
+        .right-arrow { right: 20px; }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 4rem 2rem;
+            background: #FFFFFF;
+            text-align: center;
+            min-height: 100vh;
+            position: relative;
+        }
+        .how-it-works h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #2A4494;
+            margin-bottom: 3rem;
+        }
+        .how-it-works-container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: calc(100vh - 200px);
+        }
+        .sidebar {
+            width: 30%;
+            padding-right: 2rem;
+            position: sticky;
+            top: 25%;
+            height: fit-content;
+        }
+        .step-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: rgba(42, 68, 148, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .step-item.active {
+            background: #2A4494;
+            color: #F5F7FA;
+            transform: scale(1.05);
+        }
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: #FFB74D;
+            color: #1F2A44;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+        .step-item.active .step-number {
+            background: #F8A488;
+        }
+        .step-item h3 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+        .description-area {
+            width: 70%;
+            padding-left: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .description {
+            opacity: 0;
+            transition: opacity 0.3s;
+            padding: 2rem 0;
+            min-height: 200px;
+        }
+        .description.active {
+            opacity: 1;
+        }
+        .description h3 {
+            font-size: 2rem;
+            color: #2A4494;
+            margin-bottom: 1rem;
+        }
+        .description p {
+            font-size: 1.2rem;
+            color: #1F2A44;
+        }
+
+        /* About Us Section (Redesigned) */
+        .about-us {
+            padding: 8rem 2rem;
+            background: linear-gradient(to bottom, #F5F7FA, #E8ECEF);
+            text-align: center;
+        }
+        .about-us h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #2A4494;
+            margin-bottom: 3rem;
+        }
+        .about-us-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #FFB74D;
+        }
+        .about-us-text {
+            margin-bottom: 2rem;
+        }
+        .about-us-text p {
+            font-size: 1.05rem;
+            color: #1F2A44;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+        .about-us-text .btn {
+            background: #2A4494;
+            color: #F5F7FA;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+        }
+        .about-us-text .btn:hover {
+            background: #F8A488;
+            transform: scale(1.05);
+        }
+        .about-us-image img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .about-us-image img:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+        @media (max-width: 768px) {
+            .about-us {
+                padding: 4rem 1rem;
+            }
+            .about-us-content {
+                padding: 2rem;
+            }
+            .about-us-text p {
+                font-size: 1rem;
+            }
+            .about-us-image img {
+                width: 150px;
+                height: 150px;
+            }
+        }
+        
+        .container {
+    margin-top: 100px;
+    margin-bottom: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1440px;
+    overflow-x: hidden;
+    display: flex;
+    gap: 4px;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    position: relative;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+}
+
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+.scroll-disabler {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    background-color: rgba(0,0,0,0.0001);
+    z-index: 10;
+}
+
+article.testimonial {
+    min-height: 200px;
+    padding: 1rem;
+    flex-shrink: 0;
+    width: 30%;
+}
+
+.testimonial .wrapper {
+    padding: 1.5rem;
+    min-height: 100%;
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    position: relative;
+    transition: opacity 0.5s ease;
+}
+
+.testimonial-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.testimonial-content p {
+    font-style: italic;
+    color: #1F2A44;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+}
+
+.testimonial-content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2A4494;
+}
+
+.testimonial-icon {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 1.5rem;
+    color: #FFB74D;
+    opacity: 0.3;
+}
+
+@media (max-width: 768px) {
+    .container {
+        max-width: 100%;
+        -webkit-mask-image: linear-gradient(to right, black 0%, black 80%, transparent 100%);
+        mask-image: linear-gradient(to right, black 0%, black 80%, transparent 100%);
+    }
+    article.testimonial {
+        min-width: 100%;
+        min-height: 180px;
+        padding: 0.5rem;
+    }
+    .testimonial .wrapper {
+        padding: 1rem;
+    }
+    .testimonial-content p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+    .testimonial-content h4 {
+        font-size: 0.9rem;
+    }
+    .testimonial-icon {
+        font-size: 1.2rem;
+        top: 5px;
+    }
+}
+
+        /* FAQ */
+        .faq {
+            padding: 8rem 2rem;
+            background: #FFFFFF;
+            text-align: center;
+        }
+        .faq h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #2A4494;
+            margin-bottom: 5rem;
+        }
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .faq-item {
+            margin-bottom: 1.5rem;
+            background: #F5F7FA;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .faq-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        .faq-question {
+            font-size: 1.5rem;
+            font-weight: 600;
+            padding: 1.5rem;
+            color: #2A4494;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-question::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #FFB74D;
+            transition: transform 0.3s;
+        }
+        .faq-item.active .faq-question::after {
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            font-size: 1.2rem;
+            padding: 0 1.5rem 1.5rem;
+            color: #1F2A44;
+            display: none;
+            line-height: 1.8;
+        }
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .faq-question { font-size: 1.2rem; }
+            .faq-answer { font-size: 1rem; }
+        }
+
+        /* CTA Banner */
+        .cta-banner {
+            width: 95%;
+            border-radius: 10px;
+            padding: 8rem 2rem;
+            background: linear-gradient(to right, #2A4494, #F8A488);
+            text-align: center;
+            color: #F5F7FA;
+            min-height: 400px;
+        }
+        .cta-banner h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 3rem;
+        }
+        .cta-banner p {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1F2A44;
+            padding: 8rem 2rem;
+            color: #F5F7FA;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 4rem;
+            max-width: 1200px;
+            margin: 0 auto 6rem;
+        }
+        .footer-section h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #F8A488;
+            margin-bottom: 2rem;
+        }
+        .footer-section p, .footer-section a {
+            font-size: 1.2rem;
+            color: #F5F7FA;
+            margin: 1rem 0;
+            text-decoration: none;
+        }
+        .footer-section a:hover { color: #FFB74D; }
+        .footer-bottom {
+            text-align: center;
+            font-size: 1rem;
+            opacity: 0.8;
+            color: #F5F7FA;
+            padding-top: 2rem;
+        }
+
+        /* Responsive (Mobile) */
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.5rem; }
+            .hero-content p { font-size: 1.2rem; }
+            .hero-content .btn { padding: 0.8rem 2rem; font-size: 1rem; }
+            .hero-arrow { width: 40px; height: 40px; font-size: 1.2rem; }
+            .nav-mobile-btn { display: block; }
+            .nav-links { display: none; }
+            .nav-actions { display: none; }
+            .nav-container { justify-content: space-between; }
+            .nav-mobile-menu.active .nav-links,
+            .nav-mobile-menu.active .nav-actions {
+                display: block;
+            }
+            .nav-mobile-menu .nav-links a,
+            .nav-mobile-menu .nav-actions a {
+                display: block;
+                margin: 0.5rem 0;
+            }
+            .nav-mobile-menu .nav-actions {
+                margin-top: 1rem;
+            }
+            .how-it-works-container {
+                flex-direction: column;
+                height: auto;
+            }
+            .sidebar {
+                display: none;
+            }
+            .description-area {
+                width: 100%;
+                padding-left: 0;
+                display: block;
+            }
+            .description {
+                opacity: 1;
+                display: block;
+                padding: 1rem;
+                min-height: auto;
+                border-bottom: 1px solid rgba(42, 68, 148, 0.1);
+            }
+            .description h3 {
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
+            }
+            .description p {
+                font-size: 1rem;
+            }
+            .about-us, .faq, .cta-banner, .footer {
+                padding: 4rem 1rem;
+            }
+            .cta-banner { min-height: 300px; }
+        }
+    </style>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileBtn = document.querySelector('.nav-mobile-btn');
+        const mobileMenu = document.querySelector('.nav-mobile-menu');
+        if (mobileBtn && mobileMenu) {
+            mobileBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+            });
+        }
+
+        // Hero Slider
+        const slides = document.querySelectorAll('.hero-content');
+        const dots = document.querySelectorAll('.dot');
+        const leftArrow = document.querySelector('.left-arrow');
+        const rightArrow = document.querySelector('.right-arrow');
+        let currentSlide = 0;
+        let autoSlideInterval;
+
+        const slideContents = [
+            {
+                title: "Discover Volunteer Magic",
+                text: "Unleash your potential with ServeSync.",
+                buttonText: "Join Now",
+                buttonUrl: "{% url 'register' %}"
+            },
+            {
+                title: "Make a Difference",
+                text: "Connect with opportunities that matter.",
+                buttonText: "Explore",
+                buttonUrl: "{% url 'register' %}"
+            },
+            {
+                title: "Track Your Impact",
+                text: "See how your efforts change lives.",
+                buttonText: "Get Started",
+                buttonUrl: "{% url 'register' %}"
+            }
+        ];
+
+        function updateSlideContent(index) {
+            const content = slideContents[index];
+            const heroContent = document.querySelector('.hero-content');
+            heroContent.querySelector('h1').textContent = content.title;
+            heroContent.querySelector('p').textContent = content.text;
+            const btn = heroContent.querySelector('.btn');
+            btn.textContent = content.buttonText;
+            btn.setAttribute('href', content.buttonUrl);
+            dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+            gsap.fromTo(heroContent, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8 });
+        }
+
+        function startAutoSlide() {
+            autoSlideInterval = setInterval(() => {
+                currentSlide = (currentSlide + 1) % slideContents.length;
+                updateSlideContent(currentSlide);
+            }, 5000);
+        }
+
+        function stopAutoSlide() {
+            clearInterval(autoSlideInterval);
+        }
+
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                stopAutoSlide();
+                const index = parseInt(dot.dataset.slide);
+                updateSlideContent(index);
+                currentSlide = index;
+                startAutoSlide();
+            });
+        });
+
+        leftArrow.addEventListener('click', () => {
+            stopAutoSlide();
+            currentSlide = (currentSlide - 1 + slideContents.length) % slideContents.length;
+            updateSlideContent(currentSlide);
+            startAutoSlide();
+        });
+
+        rightArrow.addEventListener('click', () => {
+            stopAutoSlide();
+            currentSlide = (currentSlide + 1) % slideContents.length;
+            updateSlideContent(currentSlide);
+            startAutoSlide();
+        });
+
+        updateSlideContent(0);
+        startAutoSlide();
+
+        // How It Works
+        if (window.innerWidth > 768) {
+            const stepItems = document.querySelectorAll('.step-item');
+            const descriptions = document.querySelectorAll('.description');
+
+            descriptions.forEach((desc, index) => {
+                ScrollTrigger.create({
+                    trigger: desc,
+                    start: 'top 50%',
+                    end: 'bottom 50%',
+                    onEnter: () => {
+                        stepItems.forEach(s => s.classList.remove('active'));
+                        stepItems[index].classList.add('active');
+                        descriptions.forEach(d => d.classList.remove('active'));
+                        desc.classList.add('active');
+                    },
+                    onEnterBack: () => {
+                        stepItems.forEach(s => s.classList.remove('active'));
+                        stepItems[index].classList.add('active');
+                        descriptions.forEach(d => d.classList.remove('active'));
+                        desc.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        if (window.innerWidth <= 768) {
+            const descriptions = document.querySelectorAll('.description');
+            descriptions.forEach(desc => {
+                desc.classList.add('active');
+            });
+        }
+
+        const scrollContainers = document.querySelectorAll("#infiniteScroll--left");
+
+scrollContainers.forEach((container) => {
+  const scrollWidth = container.scrollWidth;
+  let isScrollingPaused = false;
+
+  window.addEventListener("load", () => {
+    self.setInterval(() => {
+      if (isScrollingPaused) {
+        return;
+      }
+      const first = container.querySelector("article");
+
+      if (!isElementInViewport(first)) {
+        container.appendChild(first);
+        container.scrollTo(container.scrollLeft - first.offsetWidth, 0);
+      }
+      if (container.scrollLeft !== scrollWidth) {
+        container.scrollTo(container.scrollLeft + 1, 0);
+      }
+    }, 15);
+  });
+
+  function isElementInViewport(el) {
+    var rect = el.getBoundingClientRect();
+    return rect.right > 0;
+  }
+
+  function pauseScrolling() {
+    isScrollingPaused = true;
+  }
+
+  function resumeScrolling() {
+    isScrollingPaused = false;
+  }
+  const allArticles = container.querySelectorAll("article");
+  for (let article of allArticles) {
+    article.addEventListener("mouseenter", pauseScrolling);
+    article.addEventListener("mouseleave", resumeScrolling);
+  }
+});
+
+
+        // FAQ
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(i => {
+                    i.classList.remove('active');
+                    gsap.to(i.querySelector('.faq-answer'), {
+                        height: 0,
+                        opacity: 0,
+                        duration: 0.4,
+                        ease: 'power2.in'
+                    });
+                });
+                if (!isActive) {
+                    item.classList.add('active');
+                    const answer = item.querySelector('.faq-answer');
+                    gsap.fromTo(answer, 
+                        { height: 0, opacity: 0 }, 
+                        { 
+                            height: 'auto', 
+                            opacity: 1, 
+                            duration: 0.6, 
+                            ease: 'power2.out',
+                            onStart: () => answer.style.display = 'block'
+                        }
+                    );
+                }
+            });
+        });
+
+        // About Us Animation
+        gsap.from('.about-us-text p', { 
+            opacity: 0, 
+            y: 30, 
+            stagger: 0.2, 
+            duration: 0.8, 
+            ease: 'power2.out',
+            scrollTrigger: { 
+                trigger: '.about-us', 
+                start: 'top 80%' 
+            } 
+        });
+        gsap.from('.about-us-image img', { 
+            opacity: 0, 
+            scale: 0.8, 
+            duration: 0.8, 
+            ease: 'power2.out',
+            scrollTrigger: { 
+                trigger: '.about-us', 
+                start: 'top 80%' 
+            } 
+        });
+        gsap.from('.about-us-text .btn', { 
+            opacity: 0, 
+            y: 20, 
+            duration: 0.8, 
+            delay: 0.4,
+            ease: 'power2.out',
+            scrollTrigger: { 
+                trigger: '.about-us', 
+                start: 'top 80%' 
+            } 
+        });
+
+        // CTA Banner
+        gsap.from('.cta-banner', { 
+            opacity: 0, 
+            scale: 0.95, 
+            duration: 1, 
+            scrollTrigger: { 
+                trigger: '.cta-banner', 
+                start: 'top 80%' 
+            } 
+        });
+
+        // Footer
+        gsap.from('.footer-grid', { 
+            opacity: 0, 
+            y: 30, 
+            duration: 1, 
+            scrollTrigger: { 
+                trigger: '.footer', 
+                start: 'top 80%' 
+            } 
+        });
+    </script>
+{% endblock %}

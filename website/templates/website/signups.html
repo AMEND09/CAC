@@ -1,0 +1,861 @@
+{% load static %}
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manage volunteer signups with ServeSync’s intuitive dashboard. Connect organizations with passionate volunteers in Louisville, Kentucky.">
+    <meta name="keywords" content="ServeSync, volunteer management, signups, nonprofit, Louisville, Kentucky">
+    <meta name="author" content="ServeSync Inc.">
+    <meta name="robots" content="index, follow">
+    <title>Manage Signups | ServeSync</title>
+    <link rel="icon" type="image/png" href="{% static 'logo.jpg' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" integrity="sha512-1cK78a1o+ht2JcaW6g8OXYwqpev9+6GqOkz9xmBN9iUUhIndKtxwILGWYOSibOKjLsEdjyjZvYDq/cZwNeak0w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Existing styles unchanged (omitted for brevity, keep as provided) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: #F5F7FA;
+            color: #1F2A44;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .manage-section {
+            padding: 3rem 1rem;
+            background: #F5F7FA;
+            flex: 1;
+        }
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #2A4494;
+            text-align: center;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .message {
+            color: #F8A488;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .dashboard {
+            display: flex;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .sidebar {
+            width: 250px;
+            background: #FFFFFF;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+        .filter-group label {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2A4494;
+            margin-bottom: 0.5rem;
+        }
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: 1px solid #C4C9D4;
+            border-radius: 8px;
+            background: #F5F7FA;
+            color: #1F2A44;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .filter-group input:focus,
+        .filter-group select:focus {
+            border-color: #FFB74D;
+            box-shadow: 0 0 5px rgba(255, 183, 77, 0.5);
+            outline: none;
+        }
+        .filter-btn, .reset-btn, .export-btn {
+            width: 100%;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .filter-btn {
+            background: #2A4494;
+            color: #F5F7FA;
+            margin-bottom: 0.5rem;
+        }
+        .filter-btn:hover {
+            background: #FFB74D;
+            color: #1F2A44;
+            transform: translateY(-3px);
+        }
+        .reset-btn {
+            background: #F8A488;
+            color: #1F2A44;
+        }
+        .reset-btn:hover {
+            background: #FF6F61;
+            color: #F5F7FA;
+            transform: translateY(-3px);
+        }
+        .export-btn {
+            background: #28A745;
+            color: #F5F7FA;
+        }
+        .export-btn:hover {
+            background: #218838;
+            color: #F5F7FA;
+            transform: translateY(-3px);
+        }
+        .loading-spinner {
+            text-align: center;
+            color: #2A4494;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+        .main-content {
+            flex: 1;
+            background: #FFFFFF;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .view-btn {
+            padding: 0.6rem 1.2rem;
+            background: #C4C9D4;
+            color: #1F2A44;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.3s, color 0.3s;
+        }
+        .view-btn.active, .view-btn:hover {
+            background: #2A4494;
+            color: #F5F7FA;
+        }
+        .bulk-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .action-btn, .details-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        #bulk-accept {
+            background: #2A4494;
+            color: #F5F7FA;
+        }
+        #bulk-accept:hover {
+            background: #FFB74D;
+            color: #1F2A44;
+            transform: translateY(-3px);
+        }
+        #bulk-decline {
+            background: #F8A488;
+            color: #1F2A44;
+        }
+        #bulk-decline:hover {
+            background: #FF6F61;
+            color: #F5F7FA;
+            transform: translateY(-3px);
+        }
+        .action-btn:disabled {
+            background: #C4C9D4;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .details-btn {
+            background: #FFB74D;
+            color: #1F2A44;
+        }
+        .details-btn:hover {
+            background: #F8A488;
+            transform: translateY(-3px);
+        }
+        .signup-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+        }
+        .signup-table th, .signup-table td {
+            padding: 0.8rem;
+            text-align: left;
+            font-size: 0.9rem;
+            color: #1F2A44;
+        }
+        .signup-table th {
+            background: #F8F9FA;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .sortable:hover {
+            background: #E9ECEF;
+        }
+        .sortable i {
+            margin-left: 0.3rem;
+            color: #7A85A1;
+        }
+        .signup-table tr {
+            border-bottom: 1px solid #E9ECEF;
+            transition: background 0.3s;
+        }
+        .signup-table tr:hover {
+            background: #F5F7FA;
+        }
+        .status-badge {
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-badge.pending { background: #FFB74D; color: #1F2A44; }
+        .status-badge.accepted { background: #2A4494; color: #F5F7FA; }
+        .status-badge.declined { background: #F8A488; color: #1F2A44; }
+        .status-badge.completed { background: #28A745; color: #F5F7FA; }
+        .accept-btn, .decline-btn, .credit-btn, .credited-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .accept-btn { background: #2A4494; color: #F5F7FA; }
+        .accept-btn:hover { background: #FFB74D; color: #1F2A44; transform: translateY(-3px); }
+        .decline-btn { background: #F8A488; color: #1F2A44; }
+        .decline-btn:hover { background: #FF6F61; color: #F5F7FA; transform: translateY(-3px); }
+        .credit-btn { background: #28A745; color: #F5F7FA; }
+        .credit-btn:hover { background: #218838; color: #F5F7FA; transform: translateY(-3px); }
+        .credited-btn { background: #C4C9D4; color: #1F2A44; cursor: not-allowed; }
+        .action-form.submitting .accept-btn::after,
+        .action-form.submitting .decline-btn::after,
+        .action-form.submitting .credit-btn::after {
+            content: '\f110';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            animation: spin 1s linear infinite;
+            margin-left: 0.5rem;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+        .status-text { font-size: 0.9rem; color: #7A85A1; }
+        .opportunity-card {
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .opportunity-card h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2A4494;
+            margin-bottom: 0.5rem;
+        }
+        .opportunity-card p {
+            font-size: 1rem;
+            color: #1F2A44;
+            margin-bottom: 1rem;
+        }
+        .signup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        .signup-card {
+            background: #F5F7FA;
+            border-radius: 8px;
+            padding: 1rem;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .signup-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .signup-card input[type="checkbox"] {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+        }
+        .signup-card p {
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+        }
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .pagination-btn {
+            padding: 0.6rem 1.2rem;
+            background: #2A4494;
+            color: #F5F7FA;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        .pagination-btn:hover {
+            background: #FFB74D;
+            color: #1F2A44;
+        }
+        .pagination-btn:disabled {
+            background: #C4C9D4;
+            cursor: not-allowed;
+        }
+        .pagination span {
+            font-size: 1rem;
+            color: #1F2A44;
+        }
+        .footer {
+            flex-shrink: 0;
+            background: #1F2A44;
+            padding: 4rem 2rem;
+            color: #F5F7FA;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 95vw;
+            margin: 0 auto;
+        }
+        .footer-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #F8A488;
+            margin-bottom: 1rem;
+        }
+        .footer-section p, .footer-section a {
+            font-size: 1rem;
+            color: #F5F7FA;
+            text-decoration: none;
+            margin: 0.5rem 0;
+        }
+        .footer-section a:hover {
+            color: #FFB74D;
+        }
+        .footer-bottom {
+            text-align: center;
+            font-size: 0.9rem;
+            padding-top: 2rem;
+            opacity: 0.8;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #FFFFFF;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border-left: 5px solid #FFB74D;
+            position: relative;
+        }
+        .modal-content h2 {
+            font-size: 1.8rem;
+            color: #2A4494;
+            margin-bottom: 1rem;
+        }
+        .modal-content p {
+            font-size: 1rem;
+            color: #1F2A44;
+            margin: 0.5rem 0;
+        }
+        .modal-content img {
+            max-width: 100px;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #1F2A44;
+            cursor: pointer;
+        }
+        .modal-content p strong {
+            color: #2A4494;
+        }
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
+            .dashboard {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                max-width: 400px;
+                margin: 0 auto;
+            }
+        }
+        @media (max-width: 768px) {
+            .manage-section {
+                padding: 2rem 0.5rem;
+            }
+            h1 {
+                font-size: 2.2rem;
+            }
+            .signup-table {
+                display: block;
+                overflow-x: auto;
+            }
+            .signup-table th, .signup-table td {
+                min-width: 120px;
+            }
+            .signup-grid {
+                grid-template-columns: 1fr;
+            }
+            .pagination {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            .filter-group input, .filter-group select, .filter-btn, .reset-btn, .export-btn,
+            .view-btn, .action-btn, .accept-btn, .decline-btn, .credit-btn, .credited-btn, .details-btn {
+                font-size: 0.8rem;
+                padding: 0.5rem;
+            }
+            .signup-table th, .signup-table td {
+                font-size: 0.8rem;
+            }
+            .opportunity-card h2 {
+                font-size: 1.2rem;
+            }
+            .signup-card p {
+                font-size: 0.8rem;
+            }
+            .modal-content {
+                padding: 1.5rem;
+            }
+            .modal-content h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'website/org_nav.html' %}
+    <section class="manage-section">
+        <h1 data-aos="fade-down">Manage Signups</h1>
+        {% for message in messages %}
+            <p class="message" data-aos="fade-up">{{ message }}</p>
+        {% endfor %}
+        <div class="dashboard" data-aos="fade-up" data-aos-delay="100">
+            <!-- Sidebar for Filters -->
+            <aside class="sidebar">
+                <form method="GET" id="filter-form">
+                    <div class="filter-group">
+                        <label for="search">Search</label>
+                        <input type="text" id="search" name="search" value="{{ search }}" placeholder="Search by username or email" aria-label="Search by username or email">
+                    </div>
+                    <div class="filter-group">
+                        <label for="status">Status</label>
+                        <select id="status" name="status" aria-label="Filter by signup status">
+                            <option value="" {% if not status %}selected{% endif %}>All Statuses</option>
+                            <option value="Pending" {% if status == 'Pending' %}selected{% endif %}>Pending</option>
+                            <option value="Accepted" {% if status == 'Accepted' %}selected{% endif %}>Accepted</option>
+                            <option value="Declined" {% if status == 'Declined' %}selected{% endif %}>Declined</option>
+                            <option value="Completed" {% if status == 'Completed' %}selected{% endif %}>Completed</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="opportunity_id">Opportunity</label>
+                        <select id="opportunity_id" name="opportunity_id" aria-label="Filter by opportunity">
+                            <option value="" {% if not opportunity_id %}selected{% endif %}>All Opportunities</option>
+                            {% for opportunity in opportunities %}
+                                <option value="{{ opportunity.id }}" {% if opportunity_id == opportunity.id|stringformat:"s" %}selected{% endif %}>{{ opportunity.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <button type="submit" class="filter-btn" id="apply-filters">Apply Filters</button>
+                        <button type="button" class="reset-btn" onclick="window.location.href='{% url 'signup' %}'">Reset Filters</button>
+                    </div>
+                </form>
+                <div class="loading-spinner" id="filter-spinner" style="display: none;">
+                    <i class="fas fa-spinner fa-spin"></i> Applying filters...
+                </div>
+            </aside>
+            <!-- Main Content -->
+            <div class="main-content">
+                <div class="controls">
+                    <div class="view-toggle">
+                        <button id="table-view" class="view-btn active">Table View</button>
+                        <button id="card-view" class="view-btn">Card View</button>
+                    </div>
+                    <div class="bulk-actions">
+                        <form method="POST" style="margin-top: 0.5rem;">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="export_pdf">
+                            <button type="submit" class="export-btn">Export to PDF</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- Table View -->
+                <div id="table-view-content" class="view-content">
+                    <table class="signup-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="table-select-all" aria-label="Select all visible pending signups"></th>
+                                <th class="sortable" data-sort="opportunity">Opportunity <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="username">User <i class="fas fa-sort"></i></th>
+                                <th class="sortable" data-sort="email">Email <i class="fas fa-sort"></i></th>
+                                <th>Status</th>
+                                <th class="sortable" data-sort="timestamp">Signup Date <i class="fas fa-sort"></i></th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="signup-table-body">
+                            {% for opportunity, signups in grouped_signups.items %}
+                                {% for signup in signups %}
+                                    <tr class="signup-row" data-signup-id="{{ signup.id }}" data-opportunity="{{ opportunity.id }}" data-status="{% if signup.completed %}completed{% else %}{{ signup.status|lower }}{% endif %}">
+                                        <td><input type="checkbox" class="signup-checkbox" value="{{ signup.id }}" {% if signup.status != 'Pending' %}disabled{% endif %} aria-label="Select signup for {{ signup.user.username }}"></td>
+                                        <td>{{ opportunity.title }}</td>
+                                        <td>{{ signup.user.username }}</td>
+                                        <td>{{ signup.user.email }}</td>
+                                        <td>
+                                            <span class="status-badge {% if signup.completed %}completed{% else %}{{ signup.status|lower }}{% endif %}">
+                                                {% if signup.completed %}Completed{% else %}{{ signup.status }}{% endif %}
+                                            </span>
+                                        </td>
+                                        <td>{{ signup.timestamp|date:"Y-m-d H:i" }}</td>
+                                        <td>
+                                            <button class="details-btn" data-signup-id="{{ signup.id }}">View Details</button>
+                                            {% if signup.status == "Pending" %}
+                                                <form action="{% url 'signup' %}" method="POST" class="action-form" style="display: inline;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="signup_id" value="{{ signup.id }}">
+                                                    <input type="hidden" name="action" value="accept">
+                                                    <button type="submit" class="accept-btn">Accept</button>
+                                                </form>
+                                                <form action="{% url 'signup' %}" method="POST" class="action-form" style="display: inline;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="signup_id" value="{{ signup.id }}">
+                                                    <input type="hidden" name="action" value="decline">
+                                                    <button type="submit" class="decline-btn">Decline</button>
+                                                </form>
+                                            {% elif signup.status == "Accepted" %}
+                                                {% if not signup.completed %}
+                                                    <form action="{% url 'accept_signup' signup.id %}" method="GET" class="action-form" style="display: inline;">
+                                                        <button type="submit" class="credit-btn">Credit</button>
+                                                    </form>
+                                                {% else %}
+                                                    <button type="button" class="credited-btn" disabled>Credited</button>
+                                                {% endif %}
+                                            {% elif signup.status == "Credited" %}
+                                                <button type="button" class="credited-btn" disabled>Credited</button>
+                                            {% else %}
+                                                <span class="status-text">{{ signup.status }}</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="7">No signups for {{ opportunity.title }}.</td>
+                                    </tr>
+                                {% endfor %}
+                            {% empty %}
+                                <tr>
+                                    <td colspan="7">No signups match the current filters.</td>
+                                    </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Card View -->
+                <div id="card-view-content" class="view-content" style="display: none;">
+                    {% for opportunity, signups in grouped_signups.items %}
+                        <div class="opportunity-card" data-opportunity="{{ opportunity.id }}">
+                            <h2>{{ opportunity.title }}</h2>
+                            <p>{{ opportunity.description }}</p>
+                            <div class="signup-grid">
+                                {% for signup in signups %}
+                                    <div class="signup-card" data-signup-id="{{ signup.id }}" data-status="{% if signup.completed %}completed{% else %}{{ signup.status|lower }}{% endif %}">
+                                        <input type="checkbox" class="signup-checkbox" value="{{ signup.id }}" {% if signup.status != 'Pending' %}disabled{% endif %} aria-label="Select signup for {{ signup.user.username }}">
+                                        <p><strong>User:</strong> {{ signup.user.username }}</p>
+                                        <p><strong>Email:</strong> {{ signup.user.email }}</p>
+                                        <p><strong>Status:</strong> <span class="status-badge {% if signup.completed %}completed{% else %}{{ signup.status|lower }}{% endif %}">{% if signup.completed %}Completed{% else %}{{ signup.status }}{% endif %}</span></p>
+                                        <p><strong>Signup Date:</strong> {{ signup.timestamp|date:"Y-m-d H:i" }}</p>
+                                        <div class="card-actions">
+                                            <button class="details-btn" data-signup-id="{{ signup.id }}">Student Details</button>
+                                            {% if signup.status == "Pending" %}
+                                                <form action="{% url 'signup' %}" method="POST" class="action-form" style="display: inline;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="signup_id" value="{{ signup.id }}">
+                                                    <input type="hidden" name="action" value="accept">
+                                                    <button type="submit" class="accept-btn">Accept</button>
+                                                </form>
+                                                <form action="{% url 'signup' %}" method="POST" class="action-form" style="display: inline;">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="signup_id" value="{{ signup.id }}">
+                                                    <input type="hidden" name="action" value="decline">
+                                                    <button type="submit" class="decline-btn">Decline</button>
+                                                </form>
+                                            {% elif signup.status == "Accepted" %}
+                                                {% if not signup.completed %}
+                                                    <form action="{% url 'accept_signup' signup.id %}" method="GET" class="action-form" style="display: inline;">
+                                                        <button type="submit" class="credit-btn">Credit</button>
+                                                    </form>
+                                                {% else %}
+                                                    <button type="button" class="credited-btn" disabled>Credited</button>
+                                                {% endif %}
+                                            {% else %}
+                                                <span class="status-text">{{ signup.status }}</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <p>No signups for this opportunity.</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p>No opportunities or signups match the current filters.</p>
+                    {% endfor %}
+                </div>
+                <!-- Pagination -->
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if opportunity_id %}&opportunity_id={{ opportunity_id }}{% endif %}" class="pagination-btn">Previous</a>
+                    {% else %}
+                        <button class="pagination-btn" disabled>Previous</button>
+                    {% endif %}
+                    <span id="page-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if status %}&status={{ status }}{% endif %}{% if opportunity_id %}&opportunity_id={{ opportunity_id }}{% endif %}" class="pagination-btn">Next</a>
+                    {% else %}
+                        <button class="pagination-btn" disabled>Next</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Student Details Modal -->
+    {% for opportunity, signups in grouped_signups.items %}
+        {% for signup in signups %}
+            <div class="modal" id="modal-{{ signup.id }}">
+                <div class="modal-content">
+                    <button class="close-btn">×</button>
+                    <h2>Student Details</h2>
+                    {% if signup.student %}
+                        <p><strong>Name:</strong> {{ signup.student.first_name|default:"Not provided" }} {{ signup.student.last_name|default:"" }}</p>
+                        <p><strong>Email:</strong> {{ signup.user.email }}</p>
+                        <p><strong>School:</strong> {{ signup.student.school|default:"Not provided" }}</p>
+                        <p><strong>Age:</strong> {{ signup.student.age|default:"Not provided" }}</p>
+                        <p><strong>Phone Number:</strong> {{ signup.student.phone|default:"Not provided" }}</p>
+                    {% else %}
+                        <p>No student profile available for {{ signup.user.username }}.</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>ServeSync</h3>
+                <p>Connecting organizations with passionate volunteers.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: <a href="mailto:servesyncinc@gmail.com">servesyncinc@gmail.com</a></p>
+                <p>Instagram: <a target="_blank" href="https://www.instagram.com/serve.sync/">@serve.sync</a></p>
+                <p>Location: Louisville, Kentucky</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <p><a href="#volunteering">About</a></p>
+                <p><a href="#tutorial">Tutorial</a></p>
+                <p><a href="#faq">FAQ</a></p>
+            </div>
+        </div>
+        <p class="footer-bottom">© 2025 ServeSync. All rights reserved.</p>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" integrity="sha512-A7AYk1fGKX6S2SsHywmPkrnzTZHrgiVT7GcQkLGDe2ev0aWb8zejytzS8wjo7PGEXKqJOrjQ4oORtnimIRZBtw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        // View Toggle
+        const tableViewBtn = document.getElementById('table-view');
+        const cardViewBtn = document.getElementById('card-view');
+        const tableViewContent = document.getElementById('table-view-content');
+        const cardViewContent = document.getElementById('card-view-content');
+        tableViewBtn.addEventListener('click', () => {
+            tableViewBtn.classList.add('active');
+            cardViewBtn.classList.remove('active');
+            tableViewContent.style.display = 'block';
+            cardViewContent.style.display = 'none';
+            localStorage.setItem('viewMode', 'table');
+        });
+        cardViewBtn.addEventListener('click', () => {
+            cardViewBtn.classList.add('active');
+            tableViewBtn.classList.remove('active');
+            cardViewContent.style.display = 'block';
+            tableViewContent.style.display = 'none';
+            localStorage.setItem('viewMode', 'card');
+        });
+        if (localStorage.getItem('viewMode') === 'card') {
+            cardViewBtn.click();
+        }
+        // Sorting
+        const sortableHeaders = document.querySelectorAll('.sortable');
+        let currentSort = { column: '', direction: 'asc' };
+        sortableHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const column = header.dataset.sort;
+                if (currentSort.column === column) {
+                    currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentSort.column = column;
+                    currentSort.direction = 'asc';
+                }
+                sortableHeaders.forEach(h => {
+                    h.querySelector('i').className = 'fas fa-sort';
+                });
+                header.querySelector('i').className = `fas fa-sort-${currentSort.direction === 'asc' ? 'up' : 'down'}`;
+                const tbody = document.getElementById('signup-table-body');
+                const rows = Array.from(tbody.querySelectorAll('.signup-row'));
+                rows.sort((a, b) => {
+                    let aValue, bValue;
+                    if (column === 'opportunity') {
+                        aValue = a.querySelector('td:nth-child(2)').textContent;
+                        bValue = b.querySelector('td:nth-child(2)').textContent;
+                    } else if (column === 'username') {
+                        aValue = a.querySelector('td:nth-child(3)').textContent;
+                        bValue = b.querySelector('td:nth-child(3)').textContent;
+                    } else if (column === 'email') {
+                        aValue = a.querySelector('td:nth-child(4)').textContent;
+                        bValue = b.querySelector('td:nth-child(4)').textContent;
+                    } else if (column === 'timestamp') {
+                        aValue = new Date(a.querySelector('td:nth-child(6)').textContent);
+                        bValue = new Date(b.querySelector('td:nth-child(6)').textContent);
+                    }
+                    if (currentSort.direction === 'asc') {
+                        return aValue > bValue ? 1 : -1;
+                    } else {
+                        return aValue < bValue ? 1 : -1;
+                    }
+                });
+                tbody.innerHTML = '';
+                rows.forEach(row => tbody.appendChild(row));
+            });
+        });
+        
+       // Modal Handling
+        document.querySelectorAll('.details-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const signupId = btn.dataset.signupId;
+                console.log('Clicked details for signup:', signupId); // Debug
+                const modal = document.getElementById(`modal-${signupId}`);
+                if (modal) {
+                    console.log('Modal found:', modal.id); // Debug
+                    modal.style.display = 'flex';
+                } else {
+                    console.error('Modal not found for ID:', `modal-${signupId}`);
+                }
+            });
+        });
+
+        document.querySelectorAll('.close-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                btn.closest('.modal').style.display = 'none';
+            });
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+        // Filter and Form Submission Spinner
+        const filterForm = document.getElementById('filter-form');
+        const filterSpinner = document.getElementById('filter-spinner');
+        const applyFiltersBtn = document.getElementById('apply-filters');
+        filterForm.addEventListener('submit', () => {
+            applyFiltersBtn.disabled = true;
+            filterSpinner.style.display = 'block';
+        });
+        document.querySelectorAll('.action-form').forEach(form => {
+            form.addEventListener('submit', () => {
+                form.classList.add('submitting');
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

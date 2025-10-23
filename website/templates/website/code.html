@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Student - ServeSync</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #F5F7FA;
+            color: #1F2A44;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .auth-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .auth-left {
+            width: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #FFFFFF;
+            padding: 2rem;
+        }
+
+        .auth-form {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #2A4494;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            background: #34c759;
+            color: #fff;
+        }
+
+        .message.error { background: #ff4d4d; }
+
+        .code-inputs {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .code-input {
+            width: 50px;
+            height: 60px;
+            text-align: center;
+            font-size: 1.5rem;
+            background: #F5F7FA;
+            border: 1px solid rgba(42, 68, 148, 0.2);
+            border-radius: 8px;
+            color: #1F2A44;
+            transition: border-color 0.3s;
+        }
+
+        .code-input:focus {
+            outline: none;
+            border-color: #2A4494;
+            box-shadow: 0 0 5px rgba(42, 68, 148, 0.5);
+        }
+
+        .auth-form .btn {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            background: #FFB74D;
+            color: #1F2A44;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .auth-form .btn:hover {
+            background: #F8A488;
+            transform: scale(1.05);
+        }
+
+        .auth-right {
+            width: 50%;
+            background: linear-gradient(to bottom right, #2A4494, #F8A488);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: #F5F7FA;
+        }
+
+        .typing-text {
+            font-size: 2rem;
+            font-weight: 600;
+            text-align: center;
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 3px solid #F5F7FA;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                flex-direction: column;
+            }
+            .auth-left {
+                width: 100%;
+                padding: 2rem 1rem;
+            }
+            .auth-right {
+                display: none;
+            }
+            .code-input {
+                width: 40px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="auth-container">
+        <div class="auth-left">
+            <form method="POST" class="auth-form" id="verifyForm" onsubmit="combineCode(event)">
+                {% csrf_token %}
+                <h1 class="auth-title">Verify Your Account</h1>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="message {% if message.tags == 'error' %}error{% endif %}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                <div class="code-inputs">
+                    <input type="text" class="code-input" maxlength="1" required oninput="moveToNext(this, 1)">
+                    <input type="text" class="code-input" maxlength="1" required oninput="moveToNext(this, 2)">
+                    <input type="text" class="code-input" maxlength="1" required oninput="moveToNext(this, 3)">
+                    <input type="text" class="code-input" maxlength="1" required oninput="moveToNext(this, 4)">
+                    <input type="text" class="code-input" maxlength="1" required oninput="moveToNext(this, 5)">
+                    <input type="text" class="code-input" maxlength="1" oninput="moveToNext(this, 6)">
+                </div>
+                <input type="hidden" name="code" id="code">
+                <button type="submit" class="btn">Verify</button>
+            </form>
+        </div>
+        <div class="auth-right">
+            <div class="typing-text" id="typing">Secure Your Account!</div>
+        </div>
+    </section>
+
+    <script>
+        const text = "Secure Your Account!";
+        let i = 0;
+        function type() {
+            if (i < text.length) {
+                document.getElementById("typing").textContent = text.slice(0, i + 1);
+                i++;
+                setTimeout(type, 100);
+            } else {
+                setTimeout(() => {
+                    i = 0;
+                    type();
+                }, 2000);
+            }
+        }
+        type();
+
+        function moveToNext(current, nextIndex) {
+            if (current.value.length === 1 && nextIndex < 6) {
+                document.querySelectorAll('.code-input')[nextIndex].focus();
+            }
+        }
+
+        function combineCode(event) {
+            event.preventDefault();
+            const inputs = document.querySelectorAll('.code-input');
+            let code = '';
+            inputs.forEach(input => code += input.value);
+            document.getElementById('code').value = code;
+            document.getElementById('verifyForm').submit();
+        }
+
+        gsap.from(".auth-title", { opacity: 0, y: 30, duration: 1 });
+        gsap.from(".code-inputs > *", { opacity: 0, y: 20, stagger: 0.1, duration: 0.8 });
+        gsap.from(".btn", { opacity: 0, y: 20, duration: 0.8, delay: 0.6 });
+    </script>
+</body>
+</html>

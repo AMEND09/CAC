@@ -1,0 +1,292 @@
+{% extends 'website/base.html' %}
+{% load static %}
+{% block title %}ServeSync - Unauthorized Access{% endblock %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServeSync - Unauthorized Access</title>
+    <link rel="icon" type="image/png" href="{% static 'logo.jpg' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #F5F7FA;
+            color: #1F2A44;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation (Copied from index.html) */
+        .nav {
+            width: 100%;
+            background: linear-gradient(to right, #2A4494, #1F2A44);
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #F5F7FA;
+            text-decoration: none;
+        }
+        .nav-logo:hover { color: #F8A488; }
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+        .nav-links a {
+            color: #F5F7FA;
+            text-decoration: none;
+            margin-left: 2rem;
+            font-weight: 400;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: #F8A488; }
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .register-btn .btn { margin: 0; }
+        .nav-mobile-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #F5F7FA;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .nav-mobile-menu {
+            display: none;
+            background: #1F2A44;
+            padding: 1rem;
+            width: 100%;
+        }
+        .nav-mobile-menu.active { display: block; }
+        .nav-mobile-menu a {
+            display: block;
+            color: #F5F7FA;
+            text-decoration: none;
+            padding: 0.5rem 0;
+        }
+        .nav-mobile-menu a:hover { color: #F8A488; }
+
+        /* Buttons (Copied from index.html) */
+        .btn {
+            display: inline-block;
+            background: #FFB74D;
+            color: #1F2A44;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s, background 0.3s;
+        }
+        .btn:hover {
+            background: #F8A488;
+            transform: scale(1.05);
+        }
+
+        /* Unauthorized Section */
+        .unauthorized {
+            padding: 8rem 2rem;
+            background: #F5F7FA;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .unauthorized-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #FFB74D;
+        }
+        .unauthorized-content h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #2A4494;
+            margin-bottom: 1.5rem;
+        }
+        .unauthorized-content p {
+            font-size: 1.2rem;
+            color: #1F2A44;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+        .unauthorized-content .btn {
+            margin: 0.5rem;
+        }
+        .unauthorized-content .icon {
+            font-size: 3rem;
+            color: #FFB74D;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer (Copied from index.html) */
+        .footer {
+            background: #1F2A44;
+            padding: 4rem 2rem;
+            color: #F5F7FA;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 4rem;
+            max-width: 1200px;
+            margin: 0 auto 6rem;
+        }
+        .footer-section h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #F8A488;
+            margin-bottom: 2rem;
+        }
+        .footer-section p, .footer-section a {
+            font-size: 1.2rem;
+            color: #F5F7FA;
+            margin: 1rem 0;
+            text-decoration: none;
+        }
+        .footer-section a:hover { color: #FFB74D; }
+        .footer-bottom {
+            text-align: center;
+            font-size: 1rem;
+            opacity: 0.8;
+            color: #F5F7FA;
+            padding-top: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .unauthorized {
+                padding: 6rem 1rem;
+            }
+            .unauthorized-content {
+                padding: 2rem;
+            }
+            .unauthorized-content h1 {
+                font-size: 2rem;
+            }
+            .unauthorized-content p {
+                font-size: 1rem;
+            }
+            .unauthorized-content .btn {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.9rem;
+            }
+            .nav-mobile-btn { display: block; }
+            .nav-links { display: none; }
+            .nav-actions { display: none; }
+            .nav-container { justify-content: space-between; }
+            .nav-mobile-menu.active .nav-links,
+            .nav-mobile-menu.active .nav-actions {
+                display: block;
+            }
+            .nav-mobile-menu .nav-links a,
+            .nav-mobile-menu .nav-actions a {
+                display: block;
+                margin: 0.5rem 0;
+            }
+            .nav-mobile-menu .nav-actions {
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<!-- Navigation Bar -->
+<nav class="nav">
+    <div class="nav-container">
+        <a href="{% url 'index' %}" class="nav-logo">ServeSync</a>
+        <div class="nav-links">
+            <a href="{% url 'index' %}">Home</a>
+            <a href="{% url 'login_choice' %}">Login</a>
+            <a href="{% url 'register_choice' %}">Register</a>
+        </div>
+        <div class="nav-actions">
+            <div class="register-btn">
+                <a href="{% url 'register_choice' %}" class="btn">Get Started</a>
+            </div>
+        </div>
+        <button class="nav-mobile-btn"><i class="fa-solid fa-bars"></i></button>
+    </div>
+    <div class="nav-mobile-menu">
+        <div class="nav-links">
+            <a href="{% url 'index' %}">Home</a>
+            <a href="{% url 'login_choice' %}">Login</a>
+            <a href="{% url 'register_choice' %}">Register</a>
+            <a href="{% url 'contact' %}">Contact</a>
+        </div>
+        <div class="nav-actions">
+            <a href="{% url 'register_choice' %}" class="btn">Get Started</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Unauthorized Section -->
+<section class="unauthorized">
+    <div class="unauthorized-content">
+        <i class="fa-solid fa-lock icon"></i>
+        <h1>Unauthorized Access</h1>
+        <p>Sorry, you don't have permission to access this page. Please log in with the correct account or register to continue.</p>
+        <a href="{% url 'login_choice' %}" class="btn">Go to Login</a>
+        <a href="{% url 'register_choice' %}" class="btn">Go to Register</a>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-grid">
+        <div class="footer-section">
+            <h3>ServeSync</h3>
+            <p>Connecting passion with purpose.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Links</h3>
+            <a href="{% url 'register' %}">Student Signup</a><br>
+            <a href="{% url 'organization_register' %}">Organization Signup</a>
+        </div>
+        <div class="footer-section">
+            <h3>Contact</h3>
+            <p>Email: servesyncinc@gmail.com</p>
+            <p>Phone: (123) 456-7890</p>
+        </div>
+    </div>
+    <p class="footer-bottom">© 2025 ServeSync. All rights reserved.</p>
+</footer>
+
+<script>
+    // Mobile Menu Toggle (Copied from index.html)
+    const mobileBtn = document.querySelector('.nav-mobile-btn');
+    const mobileMenu = document.querySelector('.nav-mobile-menu');
+    if (mobileBtn && mobileMenu) {
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+    }
+</script>
+{% endblock %}

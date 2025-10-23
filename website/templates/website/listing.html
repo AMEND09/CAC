@@ -1,0 +1,364 @@
+{% load static %}
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ServeSync - Organization Dashboard</title>
+        <link rel="icon" type="image/png" href="{% static 'logo.jpg' %}">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
+    </head>
+<body>
+    {% include 'website/org_nav.html' %}
+<section class="listings-section">
+    <h1 data-aos="fade-down">Your Listings</h1>
+
+    {% if message %}
+        <p class="message" data-aos="fade-up">{{ message }}</p>
+    {% else %}
+        <div class="listings" data-aos="fade-up" data-aos-delay="100">
+            {% for listing in listings %}
+                <div class="listing">
+                    <h2>{{ listing.title }}</h2>
+                    <p><strong>Address:</strong> {{ listing.address }}</p>
+                    <p><strong>Date & Time:</strong> {{ listing.time }}</p>
+                    <p><strong>Category:</strong> {{ listing.category }}</p>
+                    <a href="{% url 'listing_details' listing.id %}"><button class="details-btn">Edit / Delete</button></a>
+                </div>
+            {% empty %}
+                <p class="no-listings" data-aos="fade-up">No listings found.</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-grid">
+        <div class="footer-section">
+            <h3>ServeSync</h3>
+            <p>Connecting organizations with passionate volunteers.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Contact</h3>
+            <p>Email: <a href="mailto:servesyncinc@gmail.com">servesyncinc@gmail.com</a></p>
+            <p>Instagram: <a target="_blank" href="https://www.instagram.com/serve.sync/">@serve.sync</a></p>
+            <p>Location: Louisville, Kentucky</p>
+        </div>
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <p><a href="#volunteering">About</a></p>
+            <p><a href="#tutorial">Tutorial</a></p>
+            <p><a href="#faq">FAQ</a></p>
+        </div>
+    </div>
+    <p class="footer-bottom">© 2025 ServeSync. All rights reserved.</p>
+</footer>
+
+<!-- Styles -->
+<style>
+    /* General Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: #F5F7FA;
+        color: #1F2A44;
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    
+
+    /* Listings Section */
+    .listings-section {
+        padding: 3rem 1rem;
+        background: #F5F7FA;
+        flex: 1;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: #2A4494;
+        margin-bottom: 2rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .message {
+        color: #F8A488;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .listings {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .listing {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+        padding: 20px;
+        border-radius: 12px;
+        width: 300px;
+        min-height: 350px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .listing:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .listing h2 {
+        font-size: 20px;
+        font-weight: 600;
+        color: #2A4494;
+        margin-bottom: 17px;
+        text-align: center;
+    }
+
+    .listing p {
+        font-size: 14px;
+        color: #1F2A44;
+        margin-bottom: 10px;
+    }
+
+    .listing p strong {
+        font-weight: 600;
+    }
+
+    .listing p:last-child {
+        margin-bottom: 0;
+    }
+
+    .details-btn {
+        margin-top: auto;
+        padding: 10px 15px;
+        background: #2A4494;
+        color: #F5F7FA;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+    }
+
+    .details-btn:hover {
+        background: #FFB74D;
+        color: #1F2A44;
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .no-listings {
+        font-size: 1.2rem;
+        color: #7A85A1;
+        margin-top: 2rem;
+        text-align: center;
+    }
+
+    /* Aesthetic Section */
+    .aesthetic-section {
+        position: relative;
+        background: linear-gradient(to bottom, #FFB74D, #F8A488);
+        padding: 6rem 2rem;
+        text-align: center;
+        color: #1F2A44;
+        overflow: hidden;
+    }
+
+    .aesthetic-content {
+        max-width: 95vw;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .aesthetic-content h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #1F2A44;
+    }
+
+    .aesthetic-content p {
+        font-size: 1.1rem;
+        font-weight: 400;
+        line-height: 1.8;
+        opacity: 0.9;
+    }
+
+    .wave {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 200px;
+        z-index: 0;
+    }
+
+    .wave svg {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: 200px;
+    }
+
+    /* Footer */
+    .footer {
+        flex-shrink: 0;
+        background: #1F2A44;
+        padding: 4rem 2rem;
+        color: #F5F7FA;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+        max-width: 95vw;
+        margin: 0 auto;
+    }
+
+    .footer-section h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #F8A488;
+        margin-bottom: 1rem;
+    }
+
+    .footer-section p,
+    .footer-section a {
+        font-size: 1rem;
+        color: #F5F7FA;
+        text-decoration: none;
+        margin: 0.5rem 0;
+    }
+
+    .footer-section a:hover {
+        color: #FFB74D;
+    }
+
+    .footer-bottom {
+        text-align: center;
+        font-size: 0.9rem;
+        padding-top: 2rem;
+        opacity: 0.8;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        header {
+            flex-direction: column;
+            gap: 1rem;
+            padding: 20px 5%;
+        }
+
+        .nav_links {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav_links li {
+            padding: 10px 0;
+        }
+
+        .listings-section {
+            padding: 2rem 0.5rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+        }
+
+        .listings {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .listing {
+            width: 90%;
+        }
+
+        .aesthetic-section {
+            padding: 4rem 1rem;
+        }
+
+        .wave {
+            height: 120px;
+        }
+
+        .wave svg {
+            height: 120px;
+        }
+
+        .aesthetic-content h2 {
+            font-size: 1.6rem;
+        }
+
+        .aesthetic-content p {
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 1.8rem;
+        }
+
+        .listing h2 {
+            font-size: 18px;
+        }
+
+        .listing p {
+            font-size: 13px;
+        }
+
+        .details-btn {
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+    }
+</style>
+
+<!-- Scripts -->
+<script>
+    // Initialize AOS
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true
+    });
+</script>
+</body>
+</html>
+{% endblock %}

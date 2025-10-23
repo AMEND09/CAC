@@ -1,0 +1,516 @@
+{% load static %}
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ organization.organization_name }}'s Profile - ServeSync</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css"/>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</head>
+<body>
+    <!-- Include Navigation Bar -->
+    {% include 'website/student_nav.html' %}
+
+    <!-- Main Content -->
+    <main>
+        <section class="org-profile-section">
+            <!-- Back Button -->
+            <a href="{% url 'studentorgview' %}" class="back-btn" data-aos="zoom-in">
+                <i class="fas fa-arrow-left"></i> Back to Organizations
+            </a>
+
+            <!-- Profile Header -->
+            <div class="org-header" data-aos="fade-in">
+                <h1>{{ organization.organization_name }}</h1>
+                <p class="tagline">Making a Difference, One Opportunity at a Time</p>
+            </div>
+
+            <!-- Profile Content -->
+            <div class="org-content">
+                <!-- Sidebar -->
+                <aside class="org-sidebar" data-aos="slide-right">
+                    <div class="sidebar-card stats-card">
+                        <h3>Impact Stats</h3>
+                        <div class="stat-item">
+                            <i class="fas fa-users"></i>
+                            <p><strong>People Helped:</strong> {{ organization.people_helped }}</p>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-handshake"></i>
+                            <p><strong>Facilitated:</strong> {{ organization.facilitated }}</p>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-list"></i>
+                            <p><strong>Opportunities Created:</strong> {{ organization.opportunities_created }}</p>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-check-circle"></i>
+                            <p><strong>Opportunities Completed:</strong> {{ organization.opportunities_completed }}</p>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-thumbs-up"></i>
+                            <p><strong>Accepted:</strong> {{ organization.accepted }}</p>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-thumbs-down"></i>
+                            <p><strong>Declined:</strong> {{ organization.declined }}</p>
+                        </div>
+                    </div>
+                    <div class="sidebar-card goals-card">
+                        <h3>Goals & Achievements</h3>
+                        <p><strong>Goals:</strong> {{ organization.goals }}</p>
+                        <p><strong>Current Badge:</strong> {{ organization.badge|default:"None" }}</p>
+                        <p><strong>Next Badge:</strong> {{ organization.next_badge|default:"Not set" }}</p>
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <div class="org-main-content" data-aos="slide-left">
+                    <!-- Contact Info -->
+                    <div class="info-card">
+                        <h2>Contact Information</h2>
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <p>
+                                <strong>Address:</strong> {{ organization.address|default:"Not provided" }}
+                                {% if organization.address %}
+                                    <a href="https://www.google.com/maps/search/?api=1&query={{ organization.address|urlencode }}" target="_blank" class="map-link">
+                                        <i class="fas fa-map"></i> View on Google Maps
+                                    </a>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <p><strong>Email:</strong> <a href="mailto:{{ organization.contact_email }}">{{ organization.contact_email }}</a></p>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <p>
+                                <strong>Phone:</strong>
+                                {% if organization.contact_phone %}
+                                    <a href="tel:{{ organization.contact_phone }}">{{ organization.contact_phone }}</a>
+                                {% else %}
+                                    Not provided
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="info-item">
+            <i class="fas fa-globe"></i>
+            <p>
+                <strong>Website:</strong>
+                {% if organization.website_url %}
+                    <a href="{{ organization.website_url }}" target="_blank" class="website-link">{{ organization.website_url }}</a>
+                {% else %}
+                    Not provided (optional)
+                {% endif %}
+            </p>
+        </div>
+                        <a href="mailto:{{ organization.contact_email }}" class="contact-btn">Contact Us</a>
+                    </div>
+
+                    <!-- Mission Statement (Placeholder) -->
+                    <div class="info-card">
+                        <h2>Our Mission</h2>
+                        <p>
+                            {{ organization.mission_statement|default:"We are dedicated to creating impactful volunteer opportunities that connect passionate individuals with meaningful causes to make a positive difference in the community." }}
+                        </p>
+                    </div>
+
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- Listings Section -->
+        <div class="listings-section">
+            <h2>Listings by {{ organization.organization_name }}</h2>
+            <div class="listings">
+                {% if listings %}
+                    {% for listing in listings %}
+                        <div class="listing" data-aos="fade-up">
+                            <h3>{{ listing.title }}</h3>
+                            <p><strong>Address:</strong> {{ listing.address }}</p>
+                            <p><strong>Date & Time:</strong> {{ listing.time }}</p>
+                            <p><strong>Category:</strong> {{ listing.category }}</p>
+                            <a href="{% url 'listing_detaill' listing.id %}" class="learn-more">Learn More</a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="no-listings">No listings found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>ServeSync</h3>
+                <p>Connecting passion with purpose.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: <a href="mailto:servesyncinc@gmail.com">servesyncinc@gmail.com</a></p>
+                <p>Instagram: <a target="_blank" href="https://www.instagram.com/serve.sync/">@serve.sync</a></p>
+            </div>
+        </div>
+        <p class="footer-bottom">© 2025 ServeSync. All rights reserved.</p>
+    </footer>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            background: #F5F7FA;
+            color: #1F2A44;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+
+        /* Organization Profile Section */
+        .org-profile-section {
+            padding: 4rem 2rem;
+            background: #F5F7FA;
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #2A4494;
+            font-size: 1.2rem;
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: color 0.3s;
+        }
+        .back-btn i {
+            font-size: 1.5rem;
+        }
+        .back-btn:hover {
+            color: #F8A488;
+        }
+
+        /* Organization Header */
+        .org-header {
+            background: linear-gradient(to bottom right, #FFB74D, #F8A488);
+            padding: 3rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .org-header h1 {
+            font-size: 2.8rem;
+            color: #1F2A44;
+            margin-bottom: 0.5rem;
+        }
+        .org-header .tagline {
+            font-size: 1.2rem;
+            color: #1F2A44;
+            opacity: 0.8;
+        }
+
+        /* Organization Content */
+        .org-content {
+            display: flex;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar */
+        .org-sidebar {
+            flex: 1 1 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .sidebar-card {
+            background: #FFFFFF;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar-card h3 {
+            font-size: 1.5rem;
+            color: #2A4494;
+            margin-bottom: 1rem;
+        }
+        .stats-card .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+        .stat-item i {
+            font-size: 1.3rem;
+            color: #FFB74D;
+        }
+        .stat-item p {
+            font-size: 1rem;
+            color: #1F2A44;
+        }
+        .goals-card p {
+            font-size: 1rem;
+            color: #1F2A44;
+            margin-bottom: 0.5rem;
+        }
+        .goals-card p strong {
+            color: #2A4494;
+        }
+
+        /* Main Content */
+        .org-main-content {
+            flex: 2 1 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        .info-card {
+            background: #FFFFFF;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .info-card h2 {
+            font-size: 1.8rem;
+            color: #2A4494;
+            margin-bottom: 1rem;
+        }
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+        .info-item i {
+            font-size: 1.3rem;
+            color: #FFB74D;
+        }
+        .info-item p {
+            font-size: 1rem;
+            color: #1F2A44;
+        }
+        .info-item a {
+            color: #2A4494;
+            text-decoration: none;
+        }
+        .info-item a:hover {
+            color: #F8A488;
+        }
+        .map-link {
+            margin-left: 0.5rem;
+            color: #2A4494;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: color 0.3s;
+        }
+        .map-link i {
+            font-size: 1rem;
+        }
+        .map-link:hover {
+            color: #F8A488;
+        }
+        .contact-btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: #2A4494;
+            color: #F5F7FA;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .contact-btn:hover {
+            background: #F8A488;
+            transform: scale(1.05);
+        }
+
+        /* Listings Section */
+        .listings-section {
+            padding: 4rem 2rem;
+        }
+
+        .listings-section h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            color: #2A4494;
+            margin-bottom: 1.5rem;
+        }
+        .listings {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .listing {
+            flex: 1 1 300px;
+            max-width: 300px;
+            background: #FFFFFF;
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .listing:hover {
+            transform: translateY(-3px);
+        }
+        .listing h3 {
+            font-size: 1.2rem;
+            color: #2A4494;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        .listing p {
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+        .listing p strong {
+            color: #1F2A44;
+        }
+        .learn-more {
+            display: block;
+            text-align: center;
+            padding: 0.5rem;
+            background: #FFB74D;
+            color: #1F2A44;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: auto;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .learn-more:hover {
+            background: #F8A488;
+            transform: scale(1.05);
+        }
+        .no-listings {
+            font-size: 1.2rem;
+            color: #1F2A44;
+            margin-top: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            flex-shrink: 0;
+            background: #1F2A44;
+            padding: 4rem 2rem;
+            color: #F5F7FA;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .footer-section h3 {
+            font-size: 1.5rem;
+            color: #F8A488;
+            margin-bottom: 1rem;
+        }
+        .footer-section p, .footer-section a {
+            font-size: 1rem;
+            color: #F5F7FA;
+            text-decoration: none;
+            margin: 0.5rem 0;
+        }
+        .footer-section a:hover {
+            color: #FFB74D;
+        }
+        .footer-bottom {
+            text-align: center;
+            font-size: 0.9rem;
+            padding-top: 2rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
+            .org-content {
+                flex-direction: column;
+            }
+            .org-sidebar {
+                flex: 1 1 100%;
+            }
+            .org-main-content {
+                flex: 1 1 100%;
+            }
+            .listing {
+                flex: 1 1 45%;
+                max-width: 45%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .org-profile-section {
+                padding: 2rem 1rem;
+            }
+            .org-header {
+                padding: 2rem 1rem;
+            }
+            .org-header h1 {
+                font-size: 2rem;
+            }
+            .org-header .tagline {
+                font-size: 1rem;
+            }
+            .sidebar-card h3 {
+                font-size: 1.3rem;
+            }
+            .info-card h2 {
+                font-size: 1.5rem;
+            }
+            .listings-section h2 {
+                font-size: 1.5rem;
+            }
+            .listing {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+    </script>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,407 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ServeSync - Student Homepage</title>
+        <link rel="icon" type="image/png" href="{% static 'logo.jpg' %}">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
+    </head>
+    
+    
+<body>
+    {% include 'website/student_nav.html' %}
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Hey, {{ user_name|default:"Student" }}! 👋</h1>
+            <p>Ready to make a difference? Let’s find your next <span>volunteering opportunity</span>!</p>
+            <a href="{% url 'studentlistings' %}" class="btn">Find Opportunities</a>
+        </div>
+    </section>
+
+    <!-- Progress Section -->
+    <section class="progress">
+        <h2>Your Impact So Far</h2>
+        <div class="progress-grid">
+            <div class="progress-item">
+                <span class="progress-number">{{ student.hours_volunteered }}</span>
+                <p>Hours Volunteered</p>
+            </div>
+            <div class="progress-item">
+                <span class="progress-number">{{ student.opportunities_completed }}</span>
+                <p>Opportunities Completed</p>
+            </div>
+            <div class="progress-item">
+                <span class="progress-number">{{ student.badge }}</span>
+                <p>Badges Earned</p>
+            </div>
+        </div>
+    </section>
+
+  <!-- Recommended Opportunities Section -->
+<section class="opportunities">
+    <h2>Recommended for You</h2>
+    <div class="opportunities-grid">
+        {% for opportunity in random_listings %}
+        <div class="opportunity-card">
+            <h3>{{ opportunity.title }}</h3>
+            <p>{{ opportunity.address }}</p>
+            <p><strong>When:</strong> {{ opportunity.time|date:"l, F j, Y, g:i A" }}</p>
+            <a href="{% url 'listing_detail' opportunity.id %}" class="btn-small">Sign Up</a>
+        </div>
+        {% empty %}
+        <div class="opportunity-card">
+            <h3>No Opportunities Available</h3>
+            <p>Check back later for new volunteer opportunities!</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+    <!-- Recent Activity Section -->
+<section class="recent-activity">
+    <h2>Your Recent Activity</h2>
+    <div class="activity-list">
+        {% for activity in recent_activities %}
+            <div class="activity-item">
+                <p>{{ activity.description }} <span class="activity-date">{{ activity.timestamp|date:"F j, Y, g:i A" }}</span></p>
+            </div>
+        {% empty %}
+            <div class="activity-item">
+                <p>No recent activity yet. Start by signing up for an opportunity! 🚀</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+
+<!-- Quick Actions Section -->
+<section class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="actions-grid">
+        <a href="{% url 'studentlistings' %}" class="action-card">
+            <i class="fas fa-plus-circle action-icon"></i>
+            <h3>Browse Listings</h3>
+            <p>Search and filter through opportunities</p>
+        </a>
+        <a href="{% url 'studentorgview' %}" class="action-card">
+            <i class="fas fa-tasks action-icon"></i>
+            <h3>Search Organizations</h3>
+            <p>Search and filter through organization</p>
+        </a>
+        <a href="{% url 'setting' %}" class="action-card">
+            <i class="fas fa-building action-icon"></i>
+            <h3>Update Profile</h3>
+            <p>Keep your information up-to-date</p>
+        </a>
+        <a href="{% url 'stats' %}" class="action-card">
+            <i class="fas fa-chart-bar action-icon"></i>
+            <h3>View Stats</h3>
+            <p>Track volunteer engagement metrics</p>
+        </a>
+    </div>
+</section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>ServeSync</h3>
+                <p>Connecting passion with purpose.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: <a href="mailto:servesyncinc@gmail.com">servesyncinc@gmail.com</a></p>
+                <p>Instagram: <a target="_blank" href="https://www.instagram.com/serve.sync/">@serve.sync</a></p>
+            </div>
+        </div>
+        <p class="footer-bottom">© 2025 ServeSync. All rights reserved.</p>
+    </footer>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #F5F7FA;
+            color: #1F2A44;
+            line-height: 1.6;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 60vh;
+            background: linear-gradient(to bottom right, #2A4494, #F8A488);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #F5F7FA;
+            padding: 2rem;
+        }
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .hero-content p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .hero-content p span {
+            background: linear-gradient(to right, #FFB74D, #F8A488);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .btn {
+            display: inline-block;
+            background: #FFB74D;
+            color: #1F2A44;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .btn:hover {
+            background: #F8A488;
+            transform: scale(1.05);
+        }
+        .btn-small {
+            padding: 0.6rem 1.5rem;
+            font-size: 0.9rem;
+        }/* Quick Actions Section */
+        .quick-actions {
+            padding: 4rem 2rem;
+            background: #FFFFFF;
+            text-align: center;
+        }
+        .quick-actions h2 {
+            font-size: 2.2rem;
+            color: #2A4494;
+            margin-bottom: 2.5rem;
+        }
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .action-card {
+            padding: 2rem 1.5rem;
+            background: #F5F7FA;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            text-decoration: none;
+            color: #1F2A44;
+        }
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: #2A4494;
+            color: #F5F7FA;
+        }
+        .action-icon {
+            font-size: 2rem;
+            color: #FFB74D;
+            margin-bottom: 1rem;
+        }
+        .action-card:hover .action-icon {
+            color: #F8A488;
+        }
+        .action-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+        }
+        .action-card p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Progress Section */
+        .progress {
+            padding: 4rem 2rem;
+            background: #FFFFFF;
+            text-align: center;
+        }
+        .progress h2 {
+            font-size: 2.5rem;
+            color: #2A4494;
+            margin-bottom: 2rem;
+        }
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .progress-item {
+            padding: 2rem;
+            background: rgba(42, 68, 148, 0.05);
+            border-radius: 10px;
+        }
+        .progress-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #FFB74D;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .progress-item p {
+            font-size: 1rem;
+        }
+
+        /* Recommended Opportunities Section */
+        .opportunities {
+            padding: 4rem 2rem;
+            background: #F5F7FA;
+            text-align: center;
+        }
+        .opportunities h2 {
+            font-size: 2.5rem;
+            color: #2A4494;
+            margin-bottom: 2rem;
+        }
+        .opportunities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .opportunity-card {
+            padding: 2rem;
+            background: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .opportunity-card:hover {
+            transform: translateY(-5px);
+        }
+        .opportunity-card h3 {
+            font-size: 1.5rem;
+            color: #2A4494;
+            margin-bottom: 1rem;
+        }
+        .opportunity-card p {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Recent Activity Section */
+        .recent-activity {
+            padding: 4rem 2rem;
+            background: #FFFFFF;
+            text-align: center;
+        }
+        .recent-activity h2 {
+            font-size: 2.5rem;
+            color: #2A4494;
+            margin-bottom: 2rem;
+        }
+        .activity-list {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .activity-item {
+            padding: 1rem;
+            background: rgba(42, 68, 148, 0.05);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .activity-item p {
+            font-size: 1rem;
+        }
+        .activity-date {
+            font-size: 0.9rem;
+            color: #F8A488;
+            float: right;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1F2A44;
+            padding: 4rem 2rem;
+            color: #F5F7FA;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .footer-section h3 {
+            font-size: 1.5rem;
+            color: #F8A488;
+            margin-bottom: 1rem;
+        }
+        .footer-section p, .footer-section a {
+            font-size: 1rem;
+            color: #F5F7FA;
+            text-decoration: none;
+            margin: 0.5rem 0;
+        }
+        .footer-section a:hover {
+            color: #FFB74D;
+        }
+        .footer-bottom {
+            text-align: center;
+            font-size: 0.9rem;
+            padding-top: 2rem;
+            opacity: 0.8;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .hero {
+                height: 50vh;
+            }
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+            .progress, .opportunities, .recent-activity {
+                padding: 2rem 1rem;
+            }
+            .progress h2, .opportunities h2, .recent-activity h2 {
+                font-size: 2rem;
+            }
+            .progress-grid, .opportunities-grid {
+                grid-template-columns: 1fr;
+            }
+            .activity-date {
+                float: none;
+                display: block;
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+
+    <script>
+        // FAQ Toggle (for consistency, though not used in this version)
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

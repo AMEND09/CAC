@@ -1,0 +1,189 @@
+{% load static %}
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}ServeSync{% endblock %}</title>
+        <link rel="icon" type="image/png" href="{% static 'logo.jpg' %}">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+        <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    </head>
+<body>
+{% include 'website/org_nav.html' %}
+<!-- Messages -->
+<div class="messages">
+    {% for message in messages %}
+        {% if message.tags == 'success' %}
+            <div class="success">{{ message }}</div>
+        {% elif message.tags == 'error' %}
+            <div class="error">{{ message }}</div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<!-- Settings Section -->
+<section class="settings">
+    <div class="settings-content">
+        <h1>Organization Settings</h1>
+        <form class="settings-form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="organization_name">Organization Name: {{ org.contact_email }}</label>
+            <input type="text" id="organization_name" name="organization_name" value="{{ organization.organization_name }}" required>
+            
+            <label for="address">Address</label>
+            <input type="text" id="address" name="address" value="{{ organization.address }}">
+            
+            <label for="contact_email">Contact Email</label>
+            <input type="email" id="contact_email" name="contact_email" value="{{ organization.contact_email }}" required>
+            
+            <label for="contact_phone">Contact Phone</label>
+            <input type="tel" id="contact_phone" name="contact_phone" value="{{ organization.contact_phone }}">
+
+            <label for="website_url">Website URL (Optional)</label>
+            <input type="url" id="website_url" name="website_url" value="{{ organization.website_url|default_if_none:'' }}" placeholder="https://example.com">
+            
+            <button type="submit" class="btn">Save Changes</button>
+        </form>
+    </div>
+</section>
+<script>
+     // Client-side URL validation
+    const form = document.getElementById('settings-form');
+    const websiteUrlInput = document.getElementById('website_url');
+    form.addEventListener('submit', (event) => {
+        if (websiteUrlInput.value) {
+            const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+            if (!urlPattern.test(websiteUrlInput.value)) {
+                event.preventDefault();
+                alert('Please enter a valid URL (e.g., https://example.com).');
+                websiteUrlInput.focus();
+            }
+        }
+    });
+</script>
+<style>
+    body{
+            background: #F5F7FA;
+    }
+      /* Buttons */
+        .btn {
+            display: inline-block;
+            background: #FFB74D;
+            color: #1F2A44;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s, background 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #F8A488;
+            transform: scale(1.05);
+        }
+
+        /* Settings Section */
+        .settings {
+            padding: 3rem 2rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .settings-content {
+            max-width: 800px;
+            width: 100%;
+            background: #FFFFFF;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #FFB74D;
+        }
+        .settings-content h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #2A4494;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .settings-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .settings-form label {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #1F2A44;
+        }
+        .settings-form input,
+        .settings-form textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #D3D3D3;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #1F2A44;
+        }
+        .settings-form input[type="file"] {
+            padding: 0.5rem;
+        }
+        .settings-form .btn {
+            align-self: center;
+            padding: 0.8rem 3rem;
+        }
+        .messages {
+            max-width: 800px;
+            margin: 2rem auto;
+            text-align: center;
+        }
+        .messages .success {
+            background: #E6F4EA;
+            color: #2E7D32;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border-left: 5px solid #2E7D32;
+        }
+        .messages .error {
+            background: #FFE4E1;
+            color: #B22222;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border-left: 5px solid #B22222;
+        }
+ /* Responsive Design */
+        @media (max-width: 768px) {
+            .settings {
+                padding: 6rem 1rem;
+            }
+            .settings-content {
+                padding: 2rem;
+            }
+            .settings-content h1 {
+                font-size: 2rem;
+            }
+            .settings-form label {
+                font-size: 1rem;
+            }
+            .settings-form input,
+            .settings-form textarea {
+                font-size: 0.9rem;
+                padding: 0.6rem;
+            }
+            .settings-form .btn {
+                padding: 0.6rem 2rem;
+                font-size: 0.9rem;
+            }
+        }
+</style>
+{% endblock %}

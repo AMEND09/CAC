@@ -1,0 +1,275 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServeSync - Organizations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css"/>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</head>
+<body>
+    <!-- Include Navigation Bar -->
+    {% include 'website/student_nav.html' %}
+
+    <!-- Main Content -->
+    <section class="organizations-section">
+        <h1 data-aos="fade-down">Organizations</h1>
+
+        <!-- Search Form -->
+        <div class="search-container" data-aos="fade-up">
+            <form action="" method="get" class="search-form">
+                <div class="search-bar">
+                    <input type="text" name="search" placeholder="Search by name..." value="{{ query }}">
+                    <button type="submit" class="search-icon">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Organizations Grid -->
+        <div class="organizations">
+            {% if organizations %}
+                {% for org in organizations %}
+                    <div class="organization-item" data-aos="fade-up">
+                        <h2>{{ org.organization_name }}</h2>
+                        <p><strong>Address:</strong> {{ org.address|default:"N/A" }}</p>
+                        <p><strong>Email:</strong> <a href="mailto:{{ org.contact_email }}">{{ org.contact_email }}</a></p>
+                        <p><strong>Phone:</strong> {{ org.contact_phone|default:"N/A" }}</p>
+                        <a href="{% url 'stuorglistview' org.id %}" class="view-listings">View Profile</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-organizations">No organizations found.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>ServeSync</h3>
+                <p>Connecting passion with purpose.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: <a href="mailto:servesyncinc@gmail.com">servesyncinc@gmail.com</a></p>
+                <p>Instagram: <a target="_blank" href="https://www.instagram.com/serve.sync/">@serve.sync</a></p>
+            </div>
+        </div>
+        <p class="footer-bottom">© 2025 ServeSync. All rights reserved.</p>
+    </footer>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #F5F7FA;
+            color: #1F2A44;
+            line-height: 1.6;
+        }
+
+        /* Organizations Section */
+        .organizations-section {
+            padding: 4rem 2rem;
+            background: #F5F7FA;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #2A4494;
+            margin-bottom: 3rem;
+        }
+
+        /* Search Form */
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+        .search-form {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .search-bar {
+            position: relative;
+            width: 60vw;
+            max-width: 700px;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 0.8rem 2.5rem 0.8rem 1rem;
+            border: 1px solid #1F2A44;
+            border-radius: 5px;
+            font-size: 1rem;
+            background: transparent;
+        }
+        .search-bar input:focus {
+            outline: none;
+            border-color: #F8A488;
+        }
+        .search-bar .search-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #2A4494;
+            cursor: pointer;
+        }
+        .search-bar .search-icon:hover {
+            color: #F8A488;
+        }
+
+        /* Organizations Grid */
+        .organizations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            justify-content: center;
+        }
+        .organization-item {
+            flex: 1 1 300px;
+            max-width: 300px;
+            background: #FFFFFF;
+            padding: 1rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .organization-item:hover {
+            transform: translateY(-3px);
+        }
+        .organization-item h2 {
+            font-size: 1.2rem;
+            color: #2A4494;
+            margin-bottom: 0.5rem;
+        }
+        .organization-item p {
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+        .organization-item p strong {
+            color: #1F2A44;
+        }
+        .organization-item a {
+            color: #2A4494;
+            text-decoration: none;
+        }
+        .organization-item a:hover {
+            color: #F8A488;
+        }
+        .view-listings {
+            display: block;
+            text-align: center;
+            padding: 0.5rem;
+            background: #FFB74D;
+            color: #1F2A44;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: auto;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .view-listings:hover {
+            color:#1F2A44;
+            transform: scale(1.05);
+        }
+        .no-organizations {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #1F2A44;
+            margin-top: 2rem;
+            width: 100%;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1F2A44;
+            padding: 4rem 2rem;
+            color: #F5F7FA;
+            margin-top: 4rem;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .footer-section h3 {
+            font-size: 1.5rem;
+            color: #F8A488;
+            margin-bottom: 1rem;
+        }
+        .footer-section p, .footer-section a {
+            font-size: 1rem;
+            color: #F5F7FA;
+            text-decoration: none;
+            margin: 0.5rem 0;
+        }
+        .footer-section a:hover {
+            color: #FFB74D;
+        }
+        .footer-bottom {
+            text-align: center;
+            font-size: 0.9rem;
+            padding-top: 2rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1024px) {
+            .organization-item {
+                flex: 1 1 45%;
+                max-width: 45%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .organizations-section {
+                padding: 2rem 1rem;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .search-form {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .search-bar {
+                width: 100%;
+            }
+            .organization-item {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+    </script>
+</body>
+</html>

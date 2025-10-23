@@ -1,0 +1,498 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Stats - ServeSync</title>
+    <link rel="icon" type="image/png" href="{% static 'logo.jpg' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css"/>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    {% include 'website/student_nav.html' %}
+
+    <!-- Main Content -->
+    <main>
+        <section class="stats-section">
+            <h1 data-aos="fade-down">Your Stats</h1>
+            <div class="stats-container" data-aos="fade-up">
+                <!-- Volunteering Overview -->
+                <div class="stats-card" data-aos="zoom-in" data-aos-delay="100">
+                    <h2><i class="fas fa-hand-holding-heart"></i> Volunteering Overview</h2>
+                    <div class="stat-number" title="Total hours volunteered">{{ student.hours_volunteered }} Hours</div>
+                    <p><strong>Opportunities Completed:</strong> {{ student.opportunities_completed }}</p>
+                    <p><strong>Badges Earned:</strong> <span class="badge">{{ student.badge }}</span></p>
+                </div>
+
+                <!-- Impact Overview -->
+                <div class="stats-card" data-aos="zoom-in" data-aos-delay="200">
+                    <h2><i class="fas fa-users"></i> Impact Overview</h2>
+                    <div class="stat-number" title="Total people helped">{{ student.people_helped }} People</div>
+                    <p><strong>Funds Raised:</strong> ${{ student.funds_raised }}</p>
+                    <p><strong>Projects Led:</strong> {{ student.projects_led }}</p>
+                </div>
+
+                <!-- Goals for Next Month -->
+                <div class="stats-card" data-aos="zoom-in" data-aos-delay="300">
+                    <h2><i class="fas fa-bullseye"></i> Goals for Next Month</h2>
+                    <form method="POST" action="{% url 'update_goal_hours' %}" class="goal-form">
+                        {% csrf_token %}
+                        <div class="stat-number" title="Target volunteer hours">
+                            <div class="goal-controls">
+                                <button type="button" class="goal-btn minus-btn" onclick="updateGoalHours(-1, this)"><i class="fas fa-minus"></i></button>
+                                <span class="goal-value">{{ student.goal_hours }}</span> Hours
+                                <input type="hidden" name="goal_hours" class="goal-input" value="{{ student.goal_hours }}">
+                                <button type="button" class="goal-btn plus-btn" onclick="updateGoalHours(1, this)"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <button type="submit" class="save-btn">Save Goal</button>
+                    </form>
+                    <p><strong>Next Badge:</strong> {{ student.next_badge }}</p>
+                </div>
+
+                <!-- Acceptance Rate -->
+                <div class="stats-card" data-aos="zoom-in" data-aos-delay="400">
+                    <h2><i class="fas fa-check-circle"></i> Acceptance Rate</h2>
+                    <p><strong>Signups Applied:</strong> {{ student.applied }}</p>
+                    <p><strong>Signups Accepted:</strong> {{ student.accept }}</p>
+                    <p><strong>Signups Declined:</strong> {{ student.decline }}</p>
+                    <p><strong>Acceptance Rate:</strong> {{ rate|floatformat:1 }}%</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>ServeSync</h3>
+                <p>Connecting passion with purpose.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: <a href="mailto:servesyncinc@gmail.com">servesyncinc@gmail.com</a></p>
+                <p>Instagram: <a target="_blank" href="https://www.instagram.com/serve.sync/">@serve.sync</a></p>
+            </div>
+        </div>
+        <p class="footer-bottom">© 2025 ServeSync. All rights reserved.</p>
+    </footer>
+
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: #F5F7FA;
+            color: #1F2A44;
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        main {
+            flex: 1 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 3rem 1rem;
+            background: #F5F7FA;
+            flex: 1;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #2A4494;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 95vw;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .stats-card {
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            min-height: 360px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .stats-card h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2A4494;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stats-card h2 i {
+            font-size: 1.5rem;
+            color: #FFB74D;
+        }
+
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #FFB74D;
+            margin-bottom: 1rem;
+            position: relative;
+            cursor: help;
+        }
+
+        .stat-number::after {
+            content: attr(title);
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F2A44;
+            color: #F5F7FA;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        .stat-number:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .stats-card p {
+            font-size: 1rem;
+            font-weight: 400;
+            margin-bottom: 0.75rem;
+            color: #1F2A44;
+        }
+
+        .stats-card .badge {
+            display: inline-block;
+            background: #2A4494;
+            color: #F5F7FA;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 0 10px rgba(42, 68, 148, 0.5);
+        }
+
+        .stats-card .badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(42, 68, 148, 0.7);
+        }
+
+        /* Goal Controls */
+        .goal-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .goal-btn {
+            background: #FFB74D;
+            color: #1F2A44;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            font-size: 1rem;
+        }
+
+        .goal-btn:hover {
+            background: #F8A488;
+            transform: scale(1.1);
+        }
+
+        .goal-btn:disabled {
+            background: #e3e3e3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .goal-value {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #FFB74D;
+        }
+
+        .save-btn {
+            background: #2A4494;
+            color: #F5F7FA;
+            border: none;
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            margin-top: 1rem;
+            align-self: center;
+        }
+
+        .save-btn:hover {
+            background: #1F2A44;
+            transform: scale(1.05);
+        }
+
+        /* Aesthetic Section */
+        .aesthetic-section {
+            position: relative;
+            background: linear-gradient(to bottom, #FFB74D, #F8A488);
+            padding: 6rem 2rem;
+            text-align: center;
+            color: #1F2A44;
+            overflow: hidden;
+        }
+
+        .aesthetic-content {
+            max-width: 95vw;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .aesthetic-content h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1F2A44;
+        }
+
+        .aesthetic-content p {
+            font-size: 1.1rem;
+            font-weight: 400;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+
+        .wave {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            z-index: 0;
+        }
+
+        .wave svg {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 200px;
+        }
+
+        /* Footer */
+        .footer {
+            flex-shrink: 0;
+            background: #1F2A44;
+            padding: 4rem 2rem;
+            color: #F5F7FA;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 95vw;
+            margin: 0 auto;
+        }
+
+        .footer-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #F8A488;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            font-size: 1rem;
+            color: #F5F7FA;
+            text-decoration: none;
+            margin: 0.5rem 0;
+        }
+
+        .footer-section a:hover {
+            color: #FFB74D;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            font-size: 0.9rem;
+            padding-top: 2rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .stats-section {
+                padding: 2rem 0.5rem;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 0 0.5rem;
+            }
+
+            .stats-card {
+                padding: 1.5rem;
+                min-height: 300px;
+            }
+
+            .stats-card h2 {
+                font-size: 1.6rem;
+            }
+
+            .stats-card h2 i {
+                font-size: 1.3rem;
+            }
+
+            .stat-number,
+            .goal-value {
+                font-size: 2.2rem;
+            }
+
+            .stat-number::after {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+
+            .stats-card .badge {
+                font-size: 0.8rem;
+            }
+
+            .goal-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+
+            .save-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+
+            .aesthetic-section {
+                padding: 4rem 1rem;
+            }
+
+            .wave {
+                height: 120px;
+            }
+
+            .wave svg {
+                height: 120px;
+            }
+
+            .aesthetic-content h2 {
+                font-size: 1.6rem;
+            }
+
+            .aesthetic-content p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Badge Hover Effect
+        document.querySelectorAll('.badge').forEach(badge => {
+            badge.addEventListener('mouseenter', () => {
+                badge.style.transform = 'scale(1.05)';
+            });
+            badge.addEventListener('mouseleave', () => {
+                badge.style.transform = 'scale(1)';
+            });
+        });
+
+        // Update Goal Hours
+        function updateGoalHours(change, button) {
+            const form = button.closest('.goal-form');
+            const goalValueElement = form.querySelector('.goal-value');
+            const goalInput = form.querySelector('.goal-input');
+            let currentValue = parseInt(goalValueElement.textContent) || 0;
+            currentValue += change;
+
+            // Prevent negative values
+            if (currentValue < 0) {
+                currentValue = 0;
+                button.disabled = true;
+            } else {
+                form.querySelector('.minus-btn').disabled = false;
+            }
+
+            // Update display and input
+            goalValueElement.textContent = currentValue;
+            goalInput.value = currentValue;
+        }
+    </script>
+</body>
+</html>

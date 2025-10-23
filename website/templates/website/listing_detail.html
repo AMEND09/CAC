@@ -1,0 +1,330 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listing Details - {{ listing.title }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css"/>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</head>
+<body>
+    <!-- Include Navigation Bar -->
+    {% include 'website/student_nav.html' %}
+
+    <!-- Main Content -->
+    <section class="listing-details-section">
+        <!-- Back Button -->
+        <a href="{% url 'studentlistings' %}" class="back-btn" data-aos="fade-right">
+            <i class="fas fa-arrow-left"></i> Back to Listings
+        </a>
+
+        <!-- Listing Header -->
+        <div class="listing-header" data-aos="fade-down">
+            <h1>{{ listing.title }}</h1>
+        </div>
+
+        <!-- Listing Details -->
+        <div class="listing-details" data-aos="fade-up">
+            <div class="detail-item">
+                <i class="fas fa-align-left"></i>
+                <div>
+                    <h3>Description</h3>
+                    <p>{{ listing.description }}</p>
+                </div>
+            </div>
+            <div class="detail-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <div>
+                    <h3>Location</h3>
+                    <p>
+                        {{ listing.address }}
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ listing.address|urlencode }}" target="_blank" class="map-link">
+                            <i class="fas fa-map"></i> View on Google Maps
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="detail-item">
+                <i class="fas fa-calendar-alt"></i>
+                <div>
+                    <h3>Date & Time</h3>
+                    <p>{{ time_range }}</p>
+                </div>
+            </div>
+            <div class="detail-item">
+                <i class="fas fa-tag"></i>
+                <div>
+                    <h3>Type</h3>
+                    <p>{{ listing.category }}</p>
+                </div>
+            </div>
+            <div class="detail-item">
+                <i class="fas fa-tools"></i>
+                <div>
+                    <h3>Skills Required</h3>
+                    <p>{{ listing.skills_required }}</p>
+                </div>
+            </div>
+            <div class="detail-item">
+                <i class="fas fa-user"></i>
+                <div>
+                    <h3>Age Requirement</h3>
+                    <p>{{ listing.age_requirement }}</p>
+                </div>
+            </div>
+            <div class="detail-item">
+                <i class="fas fa-clock"></i>
+                <div>
+                    <h3>Hours Expected</h3>
+                    <p>{{ listing.hours_expected }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons" data-aos="fade-up">
+            {% if has_signed_up %}
+                <button class="action-btn signed-up-btn" disabled>Signed Up</button>
+            {% else %}
+                <form action="{% url 'submit_signup' %}" method="POST" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="text" id="org" name="org" value="{{ listing.posted_by }}" required style="display: none;">
+                    <input type="text" id="listing_title" name="listing_title" value="{{ listing.title }}" required style="display: none;">
+                    <button type="submit" class="action-btn signup-btn">Sign Up</button>
+                </form>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-section">
+                <h3>ServeSync</h3>
+                <p>Connecting passion with purpose.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: <a href="mailto:servesyncinc@gmail.com">servesyncinc@gmail.com</a></p>
+                <p>Instagram: <a target="_blank" href="https://www.instagram.com/serve.sync/">@serve.sync</a></p>
+            </div>
+        </div>
+        <p class="footer-bottom">© 2025 ServeSync. All rights reserved.</p>
+    </footer>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #F5F7FA;
+            color: #1F2A44;
+            line-height: 1.6;
+        }
+
+        /* Listing Details Section */
+        .listing-details-section {
+            padding: 4rem 2rem;
+            background: #F5F7FA;
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #2A4494;
+            font-size: 1.2rem;
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: color 0.3s;
+        }
+        .back-btn i {
+            font-size: 1.5rem;
+        }
+        .back-btn:hover {
+            color: #F8A488;
+        }
+
+        /* Listing Header */
+        .listing-header {
+            background: linear-gradient(to bottom right, #2A4494, #F8A488);
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .listing-header h1 {
+            font-size: 2.5rem;
+            color: #F5F7FA;
+        }
+
+        /* Listing Details */
+        .listing-details {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(42, 68, 148, 0.1);
+        }
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        .detail-item i {
+            font-size: 1.5rem;
+            color: #FFB74D;
+        }
+        .detail-item h3 {
+            font-size: 1.2rem;
+            color: #2A4494;
+            margin-bottom: 0.3rem;
+        }
+        .detail-item p {
+            font-size: 1rem;
+            color: #1F2A44;
+        }
+        .map-link {
+            margin-left: 0.5rem;
+            color: #2A4494;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: color 0.3s;
+        }
+        .map-link i {
+            font-size: 1rem;
+        }
+        .map-link:hover {
+            color: #F8A488;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            max-width: 800px;
+            margin: 2rem auto;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .action-btn {
+            padding: 0.8rem 2rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: background 0.3s, transform 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+        .signup-btn {
+            background: #FFB74D;
+            color: #1F2A44;
+        }
+        .signup-btn:hover {
+            background: #F8A488;
+            transform: scale(1.05);
+        }
+        .signed-up-btn {
+            background: #B0BEC5;
+            color: #1F2A44;
+            cursor: not-allowed;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1F2A44;
+            padding: 4rem 2rem;
+            color: #F5F7FA;
+            margin-top: 4rem;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .footer-section h3 {
+            font-size: 1.5rem;
+            color: #F8A488;
+            margin-bottom: 1rem;
+        }
+        .footer-section p, .footer-section a {
+            font-size: 1rem;
+            color: #F5F7FA;
+            text-decoration: none;
+            margin: 0.5rem 0;
+        }
+        .footer-section a:hover {
+            color: #FFB74D;
+        }
+        .footer-bottom {
+            text-align: center;
+            font-size: 0.9rem;
+            padding-top: 2rem;
+            opacity: 0.8;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .listing-details-section {
+                padding: 2rem 1rem;
+            }
+            .listing-header h1 {
+                font-size: 2rem;
+            }
+            .listing-details {
+                padding: 1rem;
+            }
+            .detail-item {
+                gap: 0.5rem;
+                padding: 0.8rem 0;
+            }
+            .detail-item i {
+                font-size: 1.2rem;
+            }
+            .detail-item h3 {
+                font-size: 1rem;
+            }
+            .detail-item p {
+                font-size: 0.9rem;
+            }
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .action-btn {
+                width: 100%;
+                padding: 0.8rem;
+            }
+        }
+    </style>
+
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+    </script>
+</body>
+</html>
