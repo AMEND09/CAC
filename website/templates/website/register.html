@@ -168,7 +168,7 @@
     <section class="auth-container">
         <div class="auth-left">
             <a href="/" class="logo-link">ServeSync</a>
-            <form method="POST" class="auth-form" id="studentRegisterForm">
+            <form method="POST" class="auth-form" id="studentRegisterForm" novalidate>
                 {% csrf_token %}
                 <h1 class="auth-title">Student Registration</h1>
                 {% if messages %}
@@ -229,6 +229,7 @@
             const nextStep = document.querySelector(`.step[data-step="${step}"]`);
             nextStep.classList.add('active');
             gsap.from(nextStep.children, { opacity: 0, y: 20, stagger: 0.1, duration: 0.8 });
+            updateStepControls();
         }
 
         function prevStep(step) {
@@ -236,10 +237,93 @@
             const prevStep = document.querySelector(`.step[data-step="${step}"]`);
             prevStep.classList.add('active');
             gsap.from(prevStep.children, { opacity: 0, y: 20, stagger: 0.1, duration: 0.8 });
+            updateStepControls();
         }
+
+        // Manage required attributes so hidden/non-active step inputs won't trigger browser validation
+        function updateStepControls() {
+            document.querySelectorAll('.step').forEach(stepEl => {
+                const isActive = stepEl.classList.contains('active');
+                stepEl.querySelectorAll('input, textarea, select').forEach(control => {
+                    // If the control originally had 'required', we only keep it required when its step is active.
+                    const origReq = control.dataset.origRequired === 'true';
+                    if (origReq) {
+                        control.required = isActive;
+                    }
+                });
+                // Enable/disable navigation buttons inside steps so next/prev remain usable only when visible
+                stepEl.querySelectorAll('button').forEach(btn => btn.disabled = !isActive);
+            });
+        }
+
+        // Initialize original required-state markers and control states on load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Store original required state for inputs inside steps
+            document.querySelectorAll('.step input, .step textarea, .step select').forEach(control => {
+                if (control.required) {
+                    control.dataset.origRequired = 'true';
+                } else {
+                    control.dataset.origRequired = 'false';
+                }
+            });
+            updateStepControls();
+        });
 
         gsap.from(".auth-title", { opacity: 0, y: 30, duration: 1 });
         gsap.from(".step.active > *", { opacity: 0, y: 20, stagger: 0.1, duration: 0.8 });
+
+        // Custom submit validation: only validate inputs in the currently visible step(s)
+        document.getElementById('studentRegisterForm').addEventListener('submit', function (e) {
+            // Clear existing messages
+            const existingMsg = document.querySelector('.message.dynamic');
+            if (existingMsg) existingMsg.remove();
+
+            // Validate required fields only for visible steps
+            let valid = true;
+            const activeSteps = document.querySelectorAll('.step.active');
+            activeSteps.forEach(stepEl => {
+                stepEl.querySelectorAll('input, textarea, select').forEach(control => {
+                    const origReq = control.dataset.origRequired === 'true';
+                    if (origReq) {
+                        if (!control.value || control.value.trim() === '') {
+                            valid = false;
+                            control.classList.add('invalid-field');
+                        } else {
+                            control.classList.remove('invalid-field');
+                        }
+                    }
+                });
+            });
+
+            // Check password confirmation if on final step
+            const pwd = document.querySelector('input[name="password"]');
+            const pwd2 = document.querySelector('input[name="password2"]');
+            if (pwd && pwd2 && pwd2.closest('.step') && pwd2.closest('.step').classList.contains('active')) {
+                if (pwd.value !== pwd2.value) {
+                    valid = false;
+                    const msg = document.createElement('div');
+                    msg.className = 'message error dynamic';
+                    msg.textContent = 'Passwords do not match.';
+                    const form = document.querySelector('.auth-form');
+                    form.prepend(msg);
+                }
+            }
+
+            if (!valid) {
+                e.preventDefault();
+                if (!document.querySelector('.message.dynamic')) {
+                    const msg = document.createElement('div');
+                    msg.className = 'message error dynamic';
+                    msg.textContent = 'Please complete the required fields.';
+                    const form = document.querySelector('.auth-form');
+                    form.prepend(msg);
+                }
+                return false;
+            }
+
+            // Allow submit when validation passes
+            return true;
+        });
     </script>
 </body>
 </html>

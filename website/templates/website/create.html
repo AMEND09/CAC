@@ -86,7 +86,8 @@
                 <option value="Military & Veterans Support">Military & Veterans Support</option>
             </select>
         </div>
-        <input type="text" id="email" name="email" value="{{ request.user.email }}" required hidden>
+    <!-- store creator email as a true hidden field (do not set required on hidden inputs) -->
+    <input type="hidden" id="email" name="email" value="{{ request.user.email }}">
         <button type="submit" class="submit-btn" data-aos="fade-up" data-aos-delay="100">Create Opportunity</button>
     </form>
 </section>

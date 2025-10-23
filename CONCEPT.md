@@ -93,8 +93,3 @@ ServeSync helps young volunteers and community organizations find each other, ma
 
 ## Final notes
 ServeSync's core strength is matching motivated students with organizations that need help, and making the administrative overhead light while preserving trust. The concept targets local community improvement and student development, with a clear path from MVP to integrations that enable institutional adoption.
-
-If you'd like, I can:
-- Expand one of the user journeys into a user-story map and wireframe suggestions.
-- Produce sample student/organization onboarding screens and a short UI spec.
-- Add an executive one-page summary suitable for grant/funding applications.
