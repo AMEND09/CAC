@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Registration - ServeSync</title>
+    <title>Member Registration - ServeSync</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
     <style>
@@ -170,7 +170,7 @@
             <a href="/" class="logo-link">ServeSync</a>
             <form method="POST" class="auth-form" id="studentRegisterForm" novalidate>
                 {% csrf_token %}
-                <h1 class="auth-title">Student Registration</h1>
+                <h1 class="auth-title">Member Registration</h1>
                 {% if messages %}
                     {% for message in messages %}
                         <div class="message {% if message.tags == 'error' %}error{% endif %}">{{ message }}</div>
@@ -179,13 +179,13 @@
                 <div class="step active" data-step="1">
                     <input type="text" name="fname" placeholder="First Name" required>
                     <input type="text" name="lname" placeholder="Last Name" required>
-                    <input type="text" name="school" placeholder="School" required>
+                    <input type="text" name="school/work" placeholder="School/Work" required>
                     <div class="btn-container">
                         <button type="button" class="btn" onclick="nextStep(2)">Next</button>
                     </div>
                 </div>
                 <div class="step" data-step="2">
-                    <input type="email" name="email" placeholder="JCPS Email" required>
+                    <input type="email" name="email" placeholder="Email" required>
                     <input type="tel" name="phone" placeholder="Phone Number" required>
                     <input type="password" name="password" placeholder="Password" required>
                     <div class="btn-container">

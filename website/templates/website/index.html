@@ -34,6 +34,27 @@
         <button class="hero-arrow right-arrow"><i class="fa-solid fa-chevron-right"></i></button>
     </section>
 
+    <!-- Mission Statement -->
+    <section class="floating-section">
+  <div class="floating-text">
+    <h2>Our Mission</h2>
+    <p>
+      ServeSync connects volunteers with organizations in meaningful ways.
+      Empower your community while tracking your impact effortlessly.
+      Our mission is to empower communities by connecting people, resources, and ideas to create meaningful impact. We strive to foster collaboration, innovation, and growth through service, education, and engagement, making a positive difference in the lives of individuals and the world around us.
+    </p>
+    <a href="{% url 'register' %}" class="btn">Join Now</a>
+  </div>
+  <div class="floating-images">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXy621WTjL6NJXWN_qio7Lc6T6YHwKlGhQbA&s"
+         style="width:200px; height:120px; border-radius:10px; transform:translateX(0);">
+    <img src="https://www.greenbayymca.org/wp-content/uploads/2024/08/Header_community-volunteer.jpg"
+         style="width:200px; height:120px; border-radius:10px; transform:translateX(50px);">
+    <img src="https://assets.aboutamazon.com/36/44/b3aef850463ab19d098d0d9b00a4/title-image-1-preferred.jpg"
+         style="width:200px; height:120px; border-radius:10px; transform:translateX(0px);">
+  </div>
+</section>
+
     <!-- How It Works Section -->
     <section class="how-it-works">
         <h2>How It Works</h2>
@@ -59,7 +80,7 @@
                 border-radius: 20px;
                 padding: 20px 20px;" class="description" data-step="0">
                     <h3>Sign Up</h3>
-                    <p>Create your profile as a student or organization. It’s quick and easy—just use your JCPS email or organization details to get started.</p>
+                    <p>Create your profile as a member/student or organization. It’s quick and easy—just use your personal, school, or work email or organization details to get started.</p>
                 </div>
                 <div style="
                 background-color: #F5F7FA;
@@ -82,9 +103,6 @@
     </section>
 
     <!-- About Us Section (Redesigned) -->
-   
-
-
    <center>
     <h2 style="
         font-size: 2.5rem;
@@ -156,11 +174,11 @@
         <div class="faq-list">
             <div class="faq-item">
                 <h3 class="faq-question">How do I sign up?</h3>
-                <p class="faq-answer">Click "Sign Up" and follow the steps to create your account using your JCPS email or organization details.</p>
+                <p class="faq-answer">Click "Sign Up" and follow the steps to create your account using your personal or school email or organization details.</p>
             </div>
             <div class="faq-item">
                 <h3 class="faq-question">Who can volunteer?</h3>
-                <p class="faq-answer">JCPS students with a valid school email can join as volunteers.</p>
+                <p class="faq-answer">Anyone with a valid email and the drive for volunteering can join as volunteers.</p>
             </div>
             <div class="faq-item">
                 <h3 class="faq-question">How are volunteer hours tracked?</h3>
@@ -185,7 +203,6 @@
             <a href="{% url 'register_choice' %}" class="btn">Sign Up Now</a>
         </section>
     </center>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-grid">
@@ -238,6 +255,75 @@
     background-color: #FFB74D;
     transform: scale(1.1);
 }
+
+.floating-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.floating-text {
+    flex: 1;
+    min-width: 300px;
+}
+
+.floating-text h2 {
+    font-size: 2.5rem;
+    color: #2A4494;
+    margin-bottom: 1rem;
+}
+
+.floating-text p {
+    font-size: 1.2rem;
+    color: #1F2A44;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.floating-images {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    min-width: 250px;
+    align-items: center;
+}
+
+.floating-images img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 15px;
+    animation: float 4s ease-in-out infinite;
+}
+
+/* Floating animation */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+@media (max-width: 768px) {
+    .floating-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    .floating-images {
+        flex-direction: row;
+        gap: 1rem;
+        justify-content: center;
+    }
+    .floating-images img {
+        width: 120px;
+        height: 120px;
+    }
+}
+
 
 @media (max-width: 768px) {
     .social-buttons {

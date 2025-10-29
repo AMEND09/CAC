@@ -1,7 +1,10 @@
 {% load static %}
 <header class="nav">
     <div class="nav-container">
-        <a href="{% url 'organization' %}" class="nav-logo">ServeSync</a>
+        <a href="{% url 'student' %}" class="nav-logo">
+                <img src="https://servesync.app/logo.png" class="nav-logo-img">
+                ServeSync
+            </a>
         <div class="nav-links">
             <a href="{% url 'dashboard' %}">Dashboard</a>
             <a href="{% url 'create' %}">Create</a>
@@ -64,6 +67,12 @@
     }
 
     /* Navigation */
+    .nav-logo-img {
+            height: 75px;     
+            width: auto;      
+            margin-right: 8px; 
+            vertical-align: middle; 
+        }
     .nav {
         width: 100%;
         background: linear-gradient(to right, #2A4494, #1F2A44);

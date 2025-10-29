@@ -178,9 +178,21 @@
             transform: scale(1.05);
         }
         .btn-small {
-            padding: 0.6rem 1.5rem;
-            font-size: 0.9rem;
-        }/* Quick Actions Section */
+            display: inline-block;
+            padding: 10px 20px;           /* vertical & horizontal padding */
+            background-color: #FFB74D;    /* nice green that pops on white */
+            color: white;                 /* text color */
+            text-decoration: none;        /* remove underline */
+            border-radius: 12px;          /* rounded edges */
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .btn-small:hover {
+            background-color: #FFB74D;    /* slightly darker green on hover */
+            transform: scale(1.05);       /* subtle hover effect */
+        }
+        /* Quick Actions Section */
         .quick-actions {
             padding: 4rem 2rem;
             background: #FFFFFF;

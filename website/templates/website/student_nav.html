@@ -1,10 +1,14 @@
 {% load static %}
 <header class="nav">
     <div class="nav-container">
-        <a href="{% url 'student' %}" class="nav-logo">ServeSync</a>
+        <a href="{% url 'student' %}" class="nav-logo">
+                <img src="https://servesync.app/logo.png" class="nav-logo-img">
+                ServeSync
+            </a>
         <div class="nav-links">
             <a href="{% url 'studentlistings' %}">Listings</a>
             <a href="{% url 'studentorgview' %}">Organizations</a>
+            <a href="{% url 'stats' %}">Stats</a>
             <a href="{% url 'leaderboard' %}">Leaderboard</a>
             <a href="{% url 'studentcontact' %}">Contact</a>
         </div>
@@ -33,7 +37,6 @@
                 <button class="dropdown-buttons"><i class="fas fa-user"></i></button>
                 <ul class="dropdown-menu">
                     <li><a href="{% url 'setting' %}">Settings</a></li>
-                    <li><a href="{% url 'stats' %}">Stats</a></li>
                     <li><a href="{% url 'logouts' %}" style="color: red;">Logout</a></li>
                 </ul>
             </div>
@@ -64,6 +67,12 @@
     }
 
     /* Navigation */
+    .nav-logo-img {
+            height: 75px;     
+            width: auto;      
+            margin-right: 8px; 
+            vertical-align: middle; 
+        }
     .nav {
         width: 100%;
         background: linear-gradient(to right, #2A4494, #1F2A44);
