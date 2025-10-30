@@ -217,13 +217,22 @@
             -ms-user-select: text !important;
             user-select: text !important;
         }
+        .nav-logo-img {
+            height: 75px;      /* adjust as needed */
+            width: auto;       /* keep proportions */
+            margin-right: 8px; /* spacing between image and text */
+            vertical-align: middle; /* aligns image with text */
+        }
     </style>
 </head>
 <body>
     <!-- Navigation -->
     <nav class="nav">
         <div class="nav-container">
-            <a href="{% url 'index' %}" class="nav-logo">ServeSync</a>
+            <a href="{% url 'index' %}" class="nav-logo">
+                <img src="https://servesync.app/logo.png" class="nav-logo-img">
+                ServeSync
+            </a>
             <div class="nav-links">
                 <a href="{% url 'login_choice' %}" class="btn">Login</a>
                 <a href="{% url 'register_choice' %}" class="btn signup">Sign Up</a>
